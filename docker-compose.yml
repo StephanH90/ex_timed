@@ -2,14 +2,14 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_USER: timed
+      POSTGRES_PASSWORD: timed
+      POSTGRES_DB: timed
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/data
     command: -p ${DATABASE_PORT:-5432}
     ports:
       - 5432:5432
 
 volumes:
-  db_data:
+  dbdata:

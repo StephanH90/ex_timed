@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :timed, Timed.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "timed",
+  password: "timed",
   hostname: "localhost",
-  database: "timed_dev",
+  database: "timed",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

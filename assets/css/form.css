@@ -1,9 +1,6 @@
 
-
-/* This file is for your main application CSS */
-/* @import "typography.css";
-@import "form.css"; */
-
+@import "typography.css";
+@import "form.css";
 
 :root {
   /* taken from https://adfinis.com/en/about-us/branding/ */
@@ -219,7 +216,3 @@
   --overview-workday: rgb(var(--old-weekend));
   --overview-weekend: var(--secondary);
 }
-
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";

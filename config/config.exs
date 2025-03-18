@@ -57,7 +57,7 @@ config :spark,
 config :timed,
   ecto_repos: [Timed.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Timed.Projects, Timed.Tracking, Timed.Accounts]
+  ash_domains: [Timed.Employment, Timed.Projects, Timed.Tracking, Timed.Accounts]
 
 # Configures the endpoint
 config :timed, TimedWeb.Endpoint,

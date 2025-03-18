@@ -3,8 +3,11 @@ defmodule Timed.Tracking.Report do
     domain: Timed.Tracking,
     data_layer: AshPostgres.DataLayer
 
+  alias Timed.Employment.User
+  alias Timed.Projects.Task
+
   postgres do
-    table "tracking_reports"
+    table "tracking_report"
     repo Timed.Repo
   end
 
@@ -15,6 +18,17 @@ defmodule Timed.Tracking.Report do
   attributes do
     attribute :id, :integer do
       primary_key? true
+      allow_nil? false
+      public? true
+    end
+
+    attribute :comment, :string do
+      allow_nil? false
+      public? true
+    end
+
+    attribute :duration, Timed.Types.Interval do
+      # todo: add interval type
       allow_nil? false
       public? true
     end
@@ -39,13 +53,30 @@ defmodule Timed.Tracking.Report do
     end
 
     attribute :user_id, :integer do
-      allow_nil? false
       public? true
     end
 
     attribute :verified_by_id, :integer do
-      allow_nil? false
       public? true
     end
+
+    attribute :review, :boolean do
+      public? true
+      allow_nil? false
+      default false
+    end
+
+    attribute :rejected, :boolean do
+      allow_nil? false
+      default false
+    end
+
+    create_timestamp :added
+    update_timestamp :updated
+  end
+
+  relationships do
+    belongs_to :user, User
+    belongs_to :task, Task
   end
 end

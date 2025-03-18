@@ -55,6 +55,8 @@ defmodule TimedWeb.Router do
     # Remove this if you do not want to use the reset password feature
     reset_route auth_routes_prefix: "/auth",
                 overrides: [TimedWeb.AuthOverrides, AshAuthentication.Phoenix.Overrides.Default]
+
+    live "/tracking", TrackingLive, :index
   end
 
   # Other scopes may use custom stacks.

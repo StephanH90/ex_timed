@@ -15,6 +15,11 @@ defmodule Timed.Projects.Task do
 
   actions do
     defaults [:read, :destroy, create: :*, update: :*]
+
+    read :for_project do
+      argument :project_id, :integer, allow_nil?: false
+      filter expr(project_id == ^arg(:project_id))
+    end
   end
 
   attributes do

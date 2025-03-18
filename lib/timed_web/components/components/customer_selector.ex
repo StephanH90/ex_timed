@@ -7,7 +7,9 @@ defmodule TimedWeb.Components.CustomerSelector do
   def mount(socket) do
     {
       :ok,
-      assign(socket, :customers, Projects.get_customers!())
+      socket
+      |> assign(:customers, Projects.get_customers!())
+      |> assign(:search, nil)
     }
   end
 
@@ -15,7 +17,9 @@ defmodule TimedWeb.Components.CustomerSelector do
   def handle_event("search", %{"search" => search}, socket) when search !== "" do
     {
       :noreply,
-      assign(socket, :customers, Projects.search_customers!(search))
+      socket
+      |> assign(:customers, Projects.search_customers!(search))
+      |> assign(:search, search)
     }
   end
 
@@ -23,23 +27,30 @@ defmodule TimedWeb.Components.CustomerSelector do
   def handle_event("search", _unsigned_params, socket) do
     {
       :noreply,
-      assign(socket, :customers, Projects.get_customers!())
+      socket
+      |> assign(:customers, Projects.get_customers!())
+      |> assign(:search, nil)
     }
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="" phx-click-away={JS.add_class("hidden", to: "#dropdown-menu")} phx-target={@myself}>
+    <div
+      class=""
+      phx-click-away={JS.add_class("hidden", to: "#dropdown-menu") |> JS.push("search")}
+      phx-target={@myself}
+    >
       <div class="relative group">
         <button
           id="dropdown-button"
           type="button"
-          phx-click={JS.remove_class("hidden", to: "#dropdown-menu")}
+          phx-click={JS.remove_class("hidden", to: "#dropdown-menu") |> JS.focus(to: "#search-input")}
           phx-target={@myself}
           class="inline-flex justify-between w-full px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
         >
-          <span class="mr-2">Customer</span>
+          <span :if={@customer_id} class="mr-2">{@customer_id}</span>
+          <span :if={is_nil(@customer_id)} class="mr-2">Select Customer</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 ml-2 -mr-1"
@@ -67,6 +78,7 @@ defmodule TimedWeb.Components.CustomerSelector do
             autocomplete="off"
             phx-change="search"
             phx-target={@myself}
+            value={@search}
             name="search"
             phx-debounce="300"
           />
@@ -74,6 +86,10 @@ defmodule TimedWeb.Components.CustomerSelector do
             :for={customer <- @customers}
             href="#"
             class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md"
+            phx-click={
+              JS.push("selected-customer", value: %{customer_id: customer.id})
+              |> JS.add_class("hidden", to: "#dropdown-menu")
+            }
           >
             {customer.name} ({customer.email})
           </a>

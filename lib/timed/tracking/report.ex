@@ -12,7 +12,9 @@ defmodule Timed.Tracking.Report do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*, update: :*]
+    defaults [:read, :destroy, create: :*]
+
+    update :update
   end
 
   attributes do

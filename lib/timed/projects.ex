@@ -15,7 +15,13 @@ defmodule Timed.Projects do
     end
 
     resource Timed.Projects.Customerassignee
-    resource Timed.Projects.Task
-    resource Timed.Projects.Project
+
+    resource Timed.Projects.Task do
+      define :get_tasks_for_project, action: :for_project, args: [:project_id]
+    end
+
+    resource Timed.Projects.Project do
+      define :get_projects_for_customer, action: :for_customer, args: [:customer_id]
+    end
   end
 end

@@ -15,11 +15,11 @@ defmodule TimedWeb.Components.Topnav do
         <FaIcon
           @icon={{if this.expand "chevron-up" "bars"}}
           @rotation={{if this.expand 180 0}}
-          @prefix="fas"
+
           @size="2x"
         />
       </button> --%>
-          <.link
+          <.navlink
             patch={~p"/tracking"}
             class="mr-1 grid place-items-center transition-[margin] md:grid-cols-2 lg:mr-2"
           >
@@ -30,53 +30,53 @@ defmodule TimedWeb.Components.Topnav do
                 <%!-- v{{app-version versionOnly=true showExtended=true}} --%>
               </div>
             </div>
-          </.link>
+          </.navlink>
         </header>
         <section class="w-full md:flex md:max-h-full md:w-auto md:flex-grow md:flex-row max-md:block max-md:h-full max-md:max-h-96 max-md:overflow-y-auto">
           <.topnav_list>
             <.topnav_list_item class="max-md:w-full">
-              <.link patch={~p"/tracking"}>
-                <.icon name="hero-clock" @size="lg" />
+              <.navlink patch={~p"/tracking"}>
+                <.icon name="hero-clock" />
                 <span>Tracking</span>
-              </.link>
+              </.navlink>
             </.topnav_list_item>
             <%!-- {{#if (can "access page")}} --%>
             <.topnav_list_item class="max-md:hidden">
-              <.link patch={~p"/tracking"}>
-                <.icon name="hero-chart-line" @prefix="fas" /> Analysis
-              </.link>
+              <.navlink patch={~p"/tracking"}>
+                <.icon name="hero-chart-line" /> Analysis
+              </.navlink>
             </.topnav_list_item>
             <.topnav_list_item>
-              <.link patch={~p"/tracking"}>
+              <.navlink patch={~p"/tracking"}>
                 <.icon name="hero-chart-bar" /> Statistics
-              </.link>
+              </.navlink>
             </.topnav_list_item>
             <.topnav_list_item>
-              <.link patch={~p"/tracking"}>
-                <.icon name="hero-briefcase" @prefix="fas" /> Projects
-              </.link>
+              <.navlink patch={~p"/tracking"}>
+                <.icon name="hero-briefcase" /> Projects
+              </.navlink>
             </.topnav_list_item>
             <%!-- {{/if}} --%>
             <%!-- {{#if this.currentUser.user.isSuperuser}} --%>
             <.topnav_list_item>
-              <.link patch={~p"/tracking"}>
-                <.icon name="hero-users" @prefix="fas" /> Users
-              </.link>
+              <.navlink patch={~p"/tracking"}>
+                <.icon name="hero-users" /> Users
+              </.navlink>
             </.topnav_list_item>
             <%!-- {{/if}} --%>
           </.topnav_list>
           <.topnav_list class="md:ml-auto md:border-t-0">
             <%!-- <ReportReviewWarning @class="max-md:hidden" /> --%>
             <.topnav_list_item>
-              <.link patch={~p"/tracking"}>
+              <.navlink patch={~p"/tracking"}>
                 <.icon name="hero-user" />
                 <%!-- {{this.currentUser.user.fullName}} --%>
-              </.link>
+              </.navlink>
             </.topnav_list_item>
             <.topnav_list_item>
-              <.link href="#" data-test-logout>
-                <.icon name="hero-power-off" @prefix="fas" /> Logout
-              </.link>
+              <.navlink href="#" data-test-logout>
+                <.icon name="hero-power-off" /> Logout
+              </.navlink>
             </.topnav_list_item>
           </.topnav_list>
         </section>
@@ -102,6 +102,23 @@ defmodule TimedWeb.Components.Topnav do
     <ul class="flex h-full flex-col md:flex-row" {@rest}>
       {render_slot(@inner_block)}
     </ul>
+    """
+  end
+
+  slot :inner_block, required: true
+  attr :patch, :string, default: nil
+  attr :rest, :global
+
+  defp navlink(assigns) do
+    ~H"""
+    <.link
+      href="#"
+      class="gap-1 grid grid-cols-[auto,minmax(0,1fr)] h-full hover:[&:not(.active)]:bg-primary-light hover:text-foreground-primary items-center lg:gap-2 md:place-items-center md:self-center [&:not(.active,:hover)]:text-tertiary py-2 px-2.5  transition-[font-size] w-full"
+      patch={@patch}
+      {@rest}
+    >
+      {render_slot(@inner_block)}
+    </.link>
     """
   end
 end

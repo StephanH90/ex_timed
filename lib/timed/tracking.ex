@@ -1,4 +1,5 @@
 defmodule Timed.Tracking do
+  @moduledoc false
   use Ash.Domain, otp_app: :timed, extensions: [AshAdmin.Domain]
 
   admin do

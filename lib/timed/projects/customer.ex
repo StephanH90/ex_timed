@@ -1,4 +1,5 @@
 defmodule Timed.Projects.Customer do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Projects,
     data_layer: AshPostgres.DataLayer

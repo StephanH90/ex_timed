@@ -1,4 +1,5 @@
 defmodule Timed.Employment.User do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Employment,
     data_layer: AshPostgres.DataLayer

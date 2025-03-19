@@ -1,4 +1,5 @@
 defmodule Timed.Accounts.Token do
+  @moduledoc false
   use Ash.Resource,
     otp_app: :timed,
     domain: Timed.Accounts,

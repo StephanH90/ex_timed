@@ -1,4 +1,5 @@
 defmodule Timed.Projects.Costcenter do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Projects,
     data_layer: AshPostgres.DataLayer

@@ -1,4 +1,5 @@
 defmodule Timed.Projects.Task do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Projects,
     data_layer: AshPostgres.DataLayer
@@ -9,8 +10,6 @@ defmodule Timed.Projects.Task do
   postgres do
     table "projects_task"
     repo Timed.Repo
-
-    # todo: custom indices
   end
 
   actions do
@@ -35,7 +34,6 @@ defmodule Timed.Projects.Task do
   end
 
   relationships do
-    # todo: deletion cascading stuff
     belongs_to :cost_center, Costcenter
     belongs_to :project, Project
   end

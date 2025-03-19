@@ -1,4 +1,5 @@
 defmodule Timed.Tracking.Report do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Tracking,
     data_layer: AshPostgres.DataLayer
@@ -30,7 +31,6 @@ defmodule Timed.Tracking.Report do
     end
 
     attribute :duration, Timed.Types.Interval do
-      # todo: add interval type
       allow_nil? false
       public? true
     end

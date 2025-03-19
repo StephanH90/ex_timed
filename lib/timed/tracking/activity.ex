@@ -1,4 +1,5 @@
 defmodule Timed.Tracking.Activity do
+  @moduledoc false
   use Ash.Resource,
     domain: Timed.Tracking,
     data_layer: AshPostgres.DataLayer

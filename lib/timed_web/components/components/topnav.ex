@@ -1,4 +1,5 @@
 defmodule TimedWeb.Components.Topnav do
+  @moduledoc false
   use TimedWeb, :live_component
 
   @impl true
@@ -74,7 +75,7 @@ defmodule TimedWeb.Components.Topnav do
               </.navlink>
             </.topnav_list_item>
             <.topnav_list_item>
-              <.navlink href="#" data-test-logout>
+              <.navlink data-test-logout>
                 <.icon name="hero-power-off" /> Logout
               </.navlink>
             </.topnav_list_item>

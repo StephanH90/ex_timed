@@ -1,4 +1,5 @@
 defmodule Timed.Secrets do
+  @moduledoc false
   use AshAuthentication.Secret
 
   def secret_for([:authentication, :tokens, :signing_secret], Timed.Accounts.User, _opts) do

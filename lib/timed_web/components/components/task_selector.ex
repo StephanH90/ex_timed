@@ -1,4 +1,5 @@
 defmodule TimedWeb.Components.TaskSelector do
+  @moduledoc false
   use TimedWeb, :live_component
   alias Timed.Projects
 
@@ -8,9 +9,17 @@ defmodule TimedWeb.Components.TaskSelector do
       :ok,
       socket
       |> assign(assigns)
-      |> assign(:tasks, Projects.get_tasks_for_project!(assigns.report.task.project.id))
+      |> assign_tasks()
       |> assign_selected_task()
     }
+  end
+
+  defp assign_tasks(%{assigns: %{selected_project_id: nil}} = socket) do
+    assign(socket, :tasks, [])
+  end
+
+  defp assign_tasks(socket) do
+    assign(socket, :tasks, Projects.get_tasks_for_project!(socket.assigns.selected_project_id))
   end
 
   defp assign_selected_task(socket) do
@@ -36,17 +45,23 @@ defmodule TimedWeb.Components.TaskSelector do
         options={@tasks}
         on_select="select-task"
         target={@target}
+        disabled={is_nil(@selected_project_id)}
       >
         <:placeholder>
-          <%= if @selected_task do %>
-            {@selected_task.name}
-          <% else %>
-            Please select a task
-          <% end %>
+          <.placeholder_text
+            selected_project_id={@selected_project_id}
+            selected_task={@selected_task}
+          />
         </:placeholder>
         <:option :let={task}>{task.name}</:option>
       </TimedWeb.Components.ReportRow.searchable_dropdown>
     </div>
     """
   end
+
+  defp placeholder_text(%{selected_project_id: nil} = assigns),
+    do: ~H"Please select project first"
+
+  defp placeholder_text(%{selected_task: nil} = assigns), do: ~H"Please select a task"
+  defp placeholder_text(assigns), do: ~H"{@selected_task.name}"
 end

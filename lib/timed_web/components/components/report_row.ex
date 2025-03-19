@@ -64,33 +64,66 @@ defmodule TimedWeb.Components.ReportRow do
   @impl true
   def render(assigns) do
     ~H"""
-    <form class="report-row grid grid-cols-4 gap-2 p-1 lg:grid-cols-[repeat(3,minmax(0,0.9fr)),minmax(0,1.6fr),minmax(0,0.45fr),minmax(2rem,0.6fr),repeat(2,minmax(2rem,0.6fr))] lg:p-1.5 xl:grid-cols-[repeat(3,minmax(0,1.2fr)),minmax(0,1.8fr),minmax(0,0.4fr),minmax(2rem,0.5fr),repeat(2,minmax(2rem,0.5fr))] xl:p-2.5 max-lg:[&>*]:w-full">
-      <.live_component
-        module={CustomerSelector}
-        id={"customer-selector-#{@report.id}"}
-        report={@report}
-        selected_customer_id={@selected_customer_id}
-        target={@myself}
-      />
+    <div>
+      <.form
+        :let={f}
+        for={to_form(@form)}
+        class="report-row grid grid-cols-4 gap-2 p-1 lg:grid-cols-[repeat(3,minmax(0,0.9fr)),minmax(0,1.6fr),minmax(0,0.45fr),minmax(2rem,0.6fr),repeat(2,minmax(2rem,0.6fr))] lg:p-1.5 xl:grid-cols-[repeat(3,minmax(0,1.2fr)),minmax(0,1.8fr),minmax(0,0.4fr),minmax(2rem,0.5fr),repeat(2,minmax(2rem,0.5fr))] xl:p-2.5 max-lg:[&>*]:w-full"
+      >
+        <.live_component
+          module={CustomerSelector}
+          id={"customer-selector-#{@report.id}"}
+          report={@report}
+          selected_customer_id={@selected_customer_id}
+          target={@myself}
+        />
 
-      <.live_component
-        module={ProjectSelector}
-        id={"project-selector-#{@report.id}"}
-        report={@report}
-        selected_customer_id={@selected_customer_id}
-        selected_project_id={@selected_project_id}
-        target={@myself}
-      />
+        <.live_component
+          module={ProjectSelector}
+          id={"project-selector-#{@report.id}"}
+          report={@report}
+          selected_customer_id={@selected_customer_id}
+          selected_project_id={@selected_project_id}
+          target={@myself}
+        />
 
-      <.live_component
-        module={TaskSelector}
-        id={"task-selector-#{@report.id}"}
-        form={@form}
-        selected_project_id={@selected_project_id}
-        report={@report}
-        target={@myself}
-      />
-    </form>
+        <.live_component
+          module={TaskSelector}
+          id={"task-selector-#{@report.id}"}
+          form={@form}
+          selected_project_id={@selected_project_id}
+          report={@report}
+          target={@myself}
+        />
+
+        <div class="form-list-cell form-group max-lg:col-span-full">
+          <.input
+            field={f[:comment]}
+            name="comment"
+            class="form-control comment-field rounded"
+            placeholder="Comment"
+            spellcheck="true"
+            type="text"
+          />
+        </div>
+
+        <div class="form-list-cell form-group cell-duration">
+          <.input
+            field={f[:duration]}
+            name="duration-day"
+            class="duration-day form-control rounded"
+            placeholder="00:00"
+            autocomplete="off"
+            spellcheck="true"
+            title="Task duration"
+            pattern="^(?:[01]?\d|2[0-3])?:?(?:00|15|30|45)?$"
+            maxlength="5"
+            type="text"
+            aria-label="duration picker"
+          />
+        </div>
+      </.form>
+    </div>
     """
   end
 

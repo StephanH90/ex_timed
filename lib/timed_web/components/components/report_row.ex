@@ -57,6 +57,30 @@ defmodule TimedWeb.Components.ReportRow do
     }
   end
 
+  @impl true
+  def handle_event("validate", form_params, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :form,
+        AshPhoenix.Form.validate(socket.assigns.form, form_params)
+      )
+    }
+  end
+
+  @impl true
+  def handle_event("save", params, socket) do
+    case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
+      {:ok, report} ->
+        # todo: inform parent that we have saved succesfully
+        {:noreply, socket}
+
+      {:error, form} ->
+        {:noreply, assign(socket, :form, form)}
+    end
+  end
+
   attr :report, Report,
     default: nil,
     doc: "Report to update. If given nil a form for a new report will be created"
@@ -68,6 +92,9 @@ defmodule TimedWeb.Components.ReportRow do
       <.form
         :let={f}
         for={to_form(@form)}
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
         class="report-row grid grid-cols-4 gap-2 p-1 lg:grid-cols-[repeat(3,minmax(0,0.9fr)),minmax(0,1.6fr),minmax(0,0.45fr),minmax(2rem,0.6fr),repeat(2,minmax(2rem,0.6fr))] lg:p-1.5 xl:grid-cols-[repeat(3,minmax(0,1.2fr)),minmax(0,1.8fr),minmax(0,0.4fr),minmax(2rem,0.5fr),repeat(2,minmax(2rem,0.5fr))] xl:p-2.5 max-lg:[&>*]:w-full"
       >
         <.live_component
@@ -104,13 +131,15 @@ defmodule TimedWeb.Components.ReportRow do
             placeholder="Comment"
             spellcheck="true"
             type="text"
+            phx-debounce="100"
           />
         </div>
 
         <div class="form-list-cell form-group cell-duration">
-          <.input
+          <%!-- TODO: figure out postgres duration type --%>
+          <%!-- <.input
             field={f[:duration]}
-            name="duration-day"
+            name="duration"
             class="duration-day form-control rounded"
             placeholder="00:00"
             autocomplete="off"
@@ -120,7 +149,47 @@ defmodule TimedWeb.Components.ReportRow do
             maxlength="5"
             type="text"
             aria-label="duration picker"
-          />
+          /> --%>
+        </div>
+
+        <div class="form-list-cell form-group cell-review-billable-icons grid grid-cols-2 content-between gap-1 self-center">
+          <div
+            class="margin-small-right form-control toggle
+    inactive text-secondary
+    mx-0.5 grid place-self-center stroke-slate-600 p-1 text-xl"
+            title="Needs review"
+            tabindex="0"
+            role="link"
+          >
+            <.icon name="hero-user" class="size-8" />
+          </div>
+          <div
+            class="form-control toggle
+    inactive text-secondary
+    mx-0.5 grid place-self-center stroke-slate-600 p-1 text-xl"
+            title="Not billable"
+            tabindex="0"
+            role="link"
+          >
+            <div class="relative size-8">
+              <.icon name="hero-currency-dollar" class="absolute inset-0 size-8" />
+              <.icon name="hero-no-symbol" class="absolute inset-0 size-8" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-list-cell form-group cell-buttons grid grid-cols-2 justify-around gap-2 self-center text-sm [&>*]:px-2">
+          <.button class="bg-danger hover:bg-danger"><.icon name="hero-trash" /></.button>
+          <.button
+            disabled={!@form.changed? || !@form.valid?}
+            class={[
+              "bg-primary hover:bg-primary",
+              (!@form.changed? || !@form.valid?) && "cursor-not-allowed"
+            ]}
+            type="submit"
+          >
+            <.icon name="hero-bookmark-square" />
+          </.button>
         </div>
       </.form>
     </div>

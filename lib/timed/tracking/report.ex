@@ -15,7 +15,9 @@ defmodule Timed.Tracking.Report do
   actions do
     defaults [:read, :destroy, create: :*]
 
-    update :update
+    update :update do
+      accept [:comment, :duration]
+    end
   end
 
   attributes do
@@ -27,6 +29,7 @@ defmodule Timed.Tracking.Report do
 
     attribute :comment, :string do
       allow_nil? false
+      constraints trim?: true, allow_empty?: false
       public? true
     end
 

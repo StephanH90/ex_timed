@@ -182,10 +182,7 @@ defmodule TimedWeb.Components.ReportRow do
           <.button class="bg-danger hover:bg-danger"><.icon name="hero-trash" /></.button>
           <.button
             disabled={!@form.changed? || !@form.valid?}
-            class={[
-              "bg-primary hover:bg-primary",
-              (!@form.changed? || !@form.valid?) && "cursor-not-allowed"
-            ]}
+            class={"bg-primary hover:bg-primary #{(!@form.changed? || !@form.valid?) && "cursor-not-allowed"}"}
             type="submit"
           >
             <.icon name="hero-bookmark-square" />

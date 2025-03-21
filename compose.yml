@@ -6,10 +6,11 @@ services:
       POSTGRES_PASSWORD: timed
       POSTGRES_DB: timed
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - timed_dbdata:/var/lib/postgresql/data
     command: -p ${DATABASE_PORT:-5433}
     ports:
       - 5433:5433
 
 volumes:
-  dbdata:
+  timed_dbdata:
+    external: true

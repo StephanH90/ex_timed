@@ -12,7 +12,7 @@ defmodule Timed.Tracking do
     resource Timed.Tracking.Activity
 
     resource Timed.Tracking.Report do
-      define :get_reports, action: :read
+      define :get_reports, action: :newest
     end
   end
 end

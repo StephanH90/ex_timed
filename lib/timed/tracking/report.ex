@@ -15,6 +15,10 @@ defmodule Timed.Tracking.Report do
   actions do
     defaults [:read, :destroy, create: :*]
 
+    read :newest do
+      prepare build(sort: :id)
+    end
+
     update :update do
       accept [:comment, :duration]
     end

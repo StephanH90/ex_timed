@@ -20,7 +20,7 @@ defmodule Timed.Tracking.Report do
     end
 
     update :update do
-      accept [:comment, :duration]
+      accept [:comment, :duration, :not_billable, :review]
     end
   end
 

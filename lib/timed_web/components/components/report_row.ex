@@ -92,6 +92,7 @@ defmodule TimedWeb.Components.ReportRow do
       <.form
         :let={f}
         for={to_form(@form)}
+        as={String.to_atom("report-form-#{@report.id}")}
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
@@ -153,29 +154,9 @@ defmodule TimedWeb.Components.ReportRow do
         </div>
 
         <div class="form-list-cell form-group cell-review-billable-icons grid grid-cols-2 content-between gap-1 self-center">
-          <div
-            class="margin-small-right form-control toggle
-    inactive text-secondary
-    mx-0.5 grid place-self-center stroke-slate-600 p-1 text-xl"
-            title="Needs review"
-            tabindex="0"
-            role="link"
-          >
-            <.icon name="hero-user" class="size-8" />
-          </div>
-          <div
-            class="form-control toggle
-    inactive text-secondary
-    mx-0.5 grid place-self-center stroke-slate-600 p-1 text-xl"
-            title="Not billable"
-            tabindex="0"
-            role="link"
-          >
-            <div class="relative size-8">
-              <.icon name="hero-currency-dollar" class="absolute inset-0 size-8" />
-              <.icon name="hero-no-symbol" class="absolute inset-0 size-8" />
-            </div>
-          </div>
+          <.toggle_button field={f[:review]} title="Needs review" icon="hero-user" />
+
+          <.toggle_button field={f[:not_billable]} title="Not billable" icon="hero-currency-dollar" />
         </div>
 
         <div class="form-list-cell form-group cell-buttons grid grid-cols-2 justify-around gap-2 self-center text-sm [&>*]:px-2">
@@ -250,6 +231,30 @@ defmodule TimedWeb.Components.ReportRow do
         >
           {render_slot(@option, option)}
         </a>
+      </div>
+    </div>
+    """
+  end
+
+  attr :field, Phoenix.HTML.FormField, required: true, doc: "The FormField of the input field"
+  attr :title, :string, required: true, doc: "The tooltip title of the button"
+
+  defp toggle_button(assigns) do
+    ~H"""
+    <div
+      class={[
+        "form-control toggle inactive mx-0.5 grid place-self-center stroke-slate-600 p-1 text-xl",
+        !@field.value && "text-primary"
+      ]}
+      title={@title}
+      tabindex="0"
+      role="link"
+    >
+      <div class="relative size-8">
+        <label>
+          <.icon name={@icon} class="absolute inset-0 size-8" />
+          <.input field={@field} name={@field.field} type="checkbox" input_class="hidden" />
+        </label>
       </div>
     </div>
     """

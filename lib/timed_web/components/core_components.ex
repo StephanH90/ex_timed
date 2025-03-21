@@ -286,6 +286,7 @@ defmodule TimedWeb.CoreComponents do
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
   attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+  attr :input_class, :string, default: nil, doc: "the class to apply to the input"
 
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
@@ -318,7 +319,7 @@ defmodule TimedWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+          class={["rounded border-zinc-300 text-zinc-900 focus:ring-0", @input_class]}
           {@rest}
         />
         {@label}

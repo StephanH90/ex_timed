@@ -38,15 +38,19 @@ defmodule Timed.Projects.Project do
       default: false,
       public?: true
 
-    attribute :total_remaining_effort, Timed.Types.Interval, allow_nil?: false, public?: true
+    attribute :total_remaining_effort, Timed.Types.Interval,
+      allow_nil?: false,
+      public?: true,
+      default: 0
+
     attribute :customer_id, :integer, allow_nil?: false, public?: true
     attribute :billing_type_id, :integer, allow_nil?: false, public?: true
     attribute :cost_center_id, :integer, allow_nil?: false, public?: true
   end
 
   relationships do
-    belongs_to :customer, Customer
-    belongs_to :billing_type, Billingtype
-    belongs_to :cost_center, Costcenter
+    belongs_to :customer, Customer, allow_nil?: false
+    belongs_to :billing_type, Billingtype, allow_nil?: false
+    belongs_to :cost_center, Costcenter, allow_nil?: false
   end
 end

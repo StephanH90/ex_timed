@@ -18,14 +18,14 @@ defmodule Timed.Test.DurationFormatter do
 
   describe "parse/1" do
     test "parses the correct duration" do
-      assert DurationFormatter.parse("") === 0
-      assert DurationFormatter.parse(nil) === 0
-      assert DurationFormatter.parse("3") === 15
-      assert DurationFormatter.parse("00:00") === 0
-      assert DurationFormatter.parse("00:15") === 15
-      assert DurationFormatter.parse("01:00") === 60
-      assert DurationFormatter.parse("01:15") === 75
-      assert DurationFormatter.parse("02:15") === 135
+      assert DurationFormatter.parse!("") === 0
+      assert DurationFormatter.parse!(nil) === 0
+      assert DurationFormatter.parse!("3") === 15
+      assert DurationFormatter.parse!("00:00") === 0
+      assert DurationFormatter.parse!("00:15") === 15
+      assert DurationFormatter.parse!("01:00") === 60
+      assert DurationFormatter.parse!("01:15") === 75
+      assert DurationFormatter.parse!("02:15") === 135
     end
   end
 end

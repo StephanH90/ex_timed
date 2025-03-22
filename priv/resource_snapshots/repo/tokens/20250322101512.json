@@ -7,8 +7,8 @@
       "primary_key?": true,
       "references": null,
       "size": null,
-      "source": "id",
-      "type": "bigint"
+      "source": "jti",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -17,8 +17,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_resource",
-      "type": "boolean"
+      "source": "subject",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -27,8 +27,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_reviewer",
-      "type": "boolean"
+      "source": "expires_at",
+      "type": "utc_datetime"
     },
     {
       "allow_nil?": false,
@@ -37,57 +37,38 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_manager",
-      "type": "boolean"
+      "source": "purpose",
+      "type": "text"
     },
     {
-      "allow_nil?": false,
+      "allow_nil?": true,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "user_id",
-      "type": "bigint"
+      "source": "extra_data",
+      "type": "map"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_customer",
-      "type": "boolean"
+      "source": "created_at",
+      "type": "utc_datetime_usec"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
-      "references": {
-        "deferrable": false,
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "index?": false,
-        "match_type": null,
-        "match_with": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "projects_customerassignee_customer_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "primary_key?": true,
-        "schema": "public",
-        "table": "projects_customer"
-      },
+      "references": null,
       "size": null,
-      "source": "customer_id",
-      "type": "bigint"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -95,7 +76,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "DE4695D3D925138F6BD3FF2B218280C5676CEB477675B3E7292E13689624F185",
+  "hash": "5B9D8AF886D7756DB854F9343352B6E9677FB06CF92A9844B75205124D930D1F",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -104,5 +85,5 @@
   },
   "repo": "Elixir.Timed.Repo",
   "schema": null,
-  "table": "projects_customerassignee"
+  "table": "tokens"
 }

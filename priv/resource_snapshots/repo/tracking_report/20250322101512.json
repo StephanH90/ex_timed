@@ -65,7 +65,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "tracking_report_task_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projects_task"
+      },
       "size": null,
       "source": "task_id",
       "type": "bigint"
@@ -75,7 +94,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "tracking_report_user_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "employment_user"
+      },
       "size": null,
       "source": "user_id",
       "type": "bigint"
@@ -136,7 +174,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F0BCEE8DCE07BD4366505F7EE8F96A1840D86BFD90ED9EC51755A2751F47172E",
+  "hash": "B1C475EEEAE7AC944D14B24722CA77A06B35D0D77FDD5836FA950CFB1EE0E25C",
   "identities": [],
   "multitenancy": {
     "attribute": null,

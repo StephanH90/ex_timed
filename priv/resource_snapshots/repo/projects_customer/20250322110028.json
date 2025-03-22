@@ -3,7 +3,7 @@
     {
       "allow_nil?": false,
       "default": "nil",
-      "generated?": false,
+      "generated?": true,
       "primary_key?": true,
       "references": null,
       "size": null,
@@ -17,57 +17,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "password",
-      "type": "text"
-    },
-    {
-      "allow_nil?": true,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "last_login",
-      "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "is_superuser",
-      "type": "boolean"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "username",
-      "type": "text"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "first_name",
-      "type": "text"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "last_name",
+      "source": "name",
       "type": "text"
     },
     {
@@ -87,8 +37,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_staff",
-      "type": "boolean"
+      "source": "website",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -97,38 +47,28 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_active",
-      "type": "boolean"
+      "source": "comment",
+      "type": "text"
     },
     {
       "allow_nil?": false,
+      "default": "false",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "archived",
+      "type": "boolean"
+    },
+    {
+      "allow_nil?": true,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "date_joined",
-      "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "tour_done",
-      "type": "boolean"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "is_accountant",
-      "type": "boolean"
+      "source": "reference",
+      "type": "text"
     }
   ],
   "base_filter": null,
@@ -138,17 +78,39 @@
       "all_tenants?": false,
       "concurrently": false,
       "error_fields": [
-        "username"
+        "name"
       ],
       "fields": [
         {
           "type": "atom",
-          "value": "username"
+          "value": "name"
         }
       ],
       "include": null,
       "message": null,
-      "name": "employment_user_username_f3762b2b_like",
+      "name": "projects_customer_name_5adc47bc_like",
+      "nulls_distinct": true,
+      "prefix": null,
+      "table": null,
+      "unique": false,
+      "using": null,
+      "where": null
+    },
+    {
+      "all_tenants?": false,
+      "concurrently": false,
+      "error_fields": [
+        "reference"
+      ],
+      "fields": [
+        {
+          "type": "atom",
+          "value": "reference"
+        }
+      ],
+      "include": null,
+      "message": null,
+      "name": "projects_customer_reference_3d93d989_like",
       "nulls_distinct": true,
       "prefix": null,
       "table": null,
@@ -159,19 +121,19 @@
   ],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "157B1E00BD5C1CD60CC0F1E418270CC2C03F2161D7E599B9313A2B83444B749E",
+  "hash": "4142D2782FE3F2E9B19EA356C840AB7DC4CD2D33460EB45C91DB7910B10C3921",
   "identities": [
     {
       "all_tenants?": false,
       "base_filter": null,
-      "index_name": "employment_user_username_key",
+      "index_name": "projects_customer_name_5adc47bc_uniq",
       "keys": [
         {
           "type": "atom",
-          "value": "username"
+          "value": "name"
         }
       ],
-      "name": "username_key",
+      "name": "name_5adc47bc_uniq",
       "nils_distinct?": true,
       "where": null
     }
@@ -183,5 +145,5 @@
   },
   "repo": "Elixir.Timed.Repo",
   "schema": null,
-  "table": "employment_user"
+  "table": "projects_customer"
 }

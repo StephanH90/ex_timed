@@ -287,6 +287,7 @@ defmodule TimedWeb.CoreComponents do
   attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :input_class, :string, default: nil, doc: "the class to apply to the input"
+  attr :label_class, :string, default: nil, doc: "the class to apply to the label"
 
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
@@ -371,7 +372,7 @@ defmodule TimedWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <.label for={@id} class={@label_class}>{@label}</.label>
       <input
         type={@type}
         name={@name}
@@ -393,11 +394,12 @@ defmodule TimedWeb.CoreComponents do
   Renders a label.
   """
   attr :for, :string, default: nil
+  attr :class, :string, default: nil
   slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class={["block text-sm font-semibold leading-6 text-zinc-800", @class]}>
       {render_slot(@inner_block)}
     </label>
     """

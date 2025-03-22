@@ -179,6 +179,8 @@ defmodule TimedWeb.Components.ReportRow do
             spellcheck="true"
             type="text"
             phx-debounce="100"
+            label="Comment"
+            label_class="sr-only"
           />
         </div>
 

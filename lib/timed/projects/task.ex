@@ -28,13 +28,12 @@ defmodule Timed.Projects.Task do
     attribute :reference, :string, constraints: [max_length: 255], allow_nil?: true, public?: true
     attribute :archived, :boolean, allow_nil?: false, default: false, public?: true
     attribute :estimated_time, Timed.Types.Interval, allow_nil?: true, public?: true
-
     attribute :cost_center_id, :integer, allow_nil?: false, public?: true
     attribute :project_id, :integer, allow_nil?: false, public?: true
   end
 
   relationships do
-    belongs_to :cost_center, Costcenter
-    belongs_to :project, Project
+    belongs_to :cost_center, Costcenter, allow_nil?: false, attribute_type: :integer
+    belongs_to :project, Project, allow_nil?: false, attribute_type: :integer
   end
 end

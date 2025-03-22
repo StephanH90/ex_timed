@@ -3,7 +3,7 @@
     {
       "allow_nil?": false,
       "default": "nil",
-      "generated?": false,
+      "generated?": true,
       "primary_key?": true,
       "references": null,
       "size": null,
@@ -17,62 +17,61 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "comment",
+      "source": "name",
       "type": "text"
     },
     {
-      "allow_nil?": false,
+      "allow_nil?": true,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "date",
-      "type": "date"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "absence_type_id",
-      "type": "bigint"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "user_id",
-      "type": "bigint"
+      "source": "reference",
+      "type": "text"
     }
   ],
   "base_filter": null,
   "check_constraints": [],
-  "custom_indexes": [],
+  "custom_indexes": [
+    {
+      "all_tenants?": false,
+      "concurrently": false,
+      "error_fields": [
+        "name"
+      ],
+      "fields": [
+        {
+          "type": "atom",
+          "value": "name"
+        }
+      ],
+      "include": null,
+      "message": null,
+      "name": "projects_billingtype_name_945d6bac_like",
+      "nulls_distinct": true,
+      "prefix": null,
+      "table": null,
+      "unique": false,
+      "using": null,
+      "where": null
+    }
+  ],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "4FEFFC6FFD6C4D9E46A7D9D2615B283CD4805D9DC2B25BF16F957173CD46F455",
+  "hash": "8DCC14C987DAC4521F1BD10A93342AC45C16A08ECD6A35B8FFC077C20676E9E9",
   "identities": [
     {
       "all_tenants?": false,
       "base_filter": null,
-      "index_name": "tracking_absence_date_user_id_96b8708e_uniq",
+      "index_name": "projects_billingtype_name_key",
       "keys": [
         {
           "type": "atom",
-          "value": "date"
-        },
-        {
-          "type": "atom",
-          "value": "user_id"
+          "value": "name"
         }
       ],
-      "name": "date_user_id_96b8708e_uniq",
+      "name": "name_key",
       "nils_distinct?": true,
       "where": null
     }
@@ -84,5 +83,5 @@
   },
   "repo": "Elixir.Timed.Repo",
   "schema": null,
-  "table": "tracking_absence"
+  "table": "projects_billingtype"
 }

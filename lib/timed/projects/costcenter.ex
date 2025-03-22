@@ -22,11 +22,7 @@ defmodule Timed.Projects.Costcenter do
   end
 
   attributes do
-    attribute :id, :integer do
-      primary_key? true
-      allow_nil? false
-      public? true
-    end
+    integer_primary_key :id
 
     attribute :name, :string do
       allow_nil? false
@@ -36,6 +32,10 @@ defmodule Timed.Projects.Costcenter do
     attribute :reference, :string do
       public? true
     end
+  end
+
+  relationships do
+    has_many :tasks, Timed.Projects.Task
   end
 
   identities do

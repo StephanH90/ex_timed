@@ -31,13 +31,13 @@
       "type": "date"
     },
     {
-      "allow_nil?": true,
+      "allow_nil?": false,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "task_id",
+      "source": "absence_type_id",
       "type": "bigint"
     },
     {
@@ -49,56 +49,6 @@
       "size": null,
       "source": "user_id",
       "type": "bigint"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "transferred",
-      "type": "boolean"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "from_time",
-      "type": "time"
-    },
-    {
-      "allow_nil?": true,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "to_time",
-      "type": "time"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "not_billable",
-      "type": "boolean"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "review",
-      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -106,8 +56,27 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "85EA52D75D0677A873290A98413ABE11FE8B2351563D5D94BC260B720812C3A2",
-  "identities": [],
+  "hash": "440EE3A16169273E6594C867589CD4F4E77322369274121908E21A632ACE6AA5",
+  "identities": [
+    {
+      "all_tenants?": false,
+      "base_filter": null,
+      "index_name": "tracking_absence_date_user_id_96b8708e_uniq",
+      "keys": [
+        {
+          "type": "atom",
+          "value": "date"
+        },
+        {
+          "type": "atom",
+          "value": "user_id"
+        }
+      ],
+      "name": "date_user_id_96b8708e_uniq",
+      "nils_distinct?": true,
+      "where": null
+    }
+  ],
   "multitenancy": {
     "attribute": null,
     "global": null,
@@ -115,5 +84,5 @@
   },
   "repo": "Elixir.Timed.Repo",
   "schema": null,
-  "table": "tracking_activity"
+  "table": "tracking_absence"
 }

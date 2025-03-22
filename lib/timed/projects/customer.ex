@@ -36,11 +36,7 @@ defmodule Timed.Projects.Customer do
   end
 
   attributes do
-    attribute :id, :integer do
-      primary_key? true
-      allow_nil? false
-      public? true
-    end
+    integer_primary_key :id
 
     attribute :name, :string do
       allow_nil? false
@@ -66,6 +62,7 @@ defmodule Timed.Projects.Customer do
     attribute :archived, :boolean do
       allow_nil? false
       public? true
+      default false
     end
 
     attribute :reference, :string do

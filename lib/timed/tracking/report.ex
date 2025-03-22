@@ -25,11 +25,7 @@ defmodule Timed.Tracking.Report do
   end
 
   attributes do
-    attribute :id, :integer do
-      primary_key? true
-      allow_nil? false
-      public? true
-    end
+    integer_primary_key :id
 
     attribute :comment, :string do
       allow_nil? false

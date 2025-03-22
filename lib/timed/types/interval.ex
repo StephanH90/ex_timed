@@ -37,9 +37,9 @@ defmodule Timed.Types.Interval do
   end
 
   def cast_input(value, _) when is_binary(value) do
-    case Integer.parse(value) do
-      {minutes, _} -> {:ok, minutes_to_interval(minutes)}
-      :error -> {:error, "Invalid interval: the input must be a valid number of minutes"}
+    case Timed.DurationFormatter.parse(value) do
+      {:ok, minutes} -> {:ok, minutes_to_interval(minutes)}
+      {:error, reason} -> {:error, reason}
     end
   end
 

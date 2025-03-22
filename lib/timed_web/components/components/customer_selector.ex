@@ -40,6 +40,7 @@ defmodule TimedWeb.Components.CustomerSelector do
         options={@customers}
         on_select="select-customer"
         target={@target}
+        field={@field}
       >
         <:placeholder>
           <%= if @selected_customer do %>

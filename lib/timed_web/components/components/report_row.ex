@@ -4,6 +4,7 @@ defmodule TimedWeb.Components.ReportRow do
   """
   alias Timed.Tracking.Report
   alias TimedWeb.Components.CustomerSelector
+  alias TimedWeb.Components.DurationPicker
   alias TimedWeb.Components.ProjectSelector
   alias TimedWeb.Components.TaskSelector
   use TimedWeb, :live_component
@@ -58,7 +59,32 @@ defmodule TimedWeb.Components.ReportRow do
   end
 
   @impl true
+  @doc """
+  This function is called from the JS hook to increase or decrease the duration using the arrow keys
+  """
+  def handle_event("update-duration", %{"duration" => duration}, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :form,
+        AshPhoenix.Form.validate(socket.assigns.form, %{
+          duration: Timed.DurationFormatter.parse!(duration)
+        })
+      )
+      |> push_event_to_update_input_field(Timed.DurationFormatter.format(duration))
+    }
+  end
+
+  @impl true
   def handle_event("validate", form_params, socket) do
+    form_params =
+      Map.replace(
+        form_params,
+        "duration",
+        Timed.DurationFormatter.parse!(form_params["duration"])
+      )
+
     {
       :noreply,
       assign(
@@ -66,19 +92,36 @@ defmodule TimedWeb.Components.ReportRow do
         :form,
         AshPhoenix.Form.validate(socket.assigns.form, form_params)
       )
+      |> push_event_to_update_input_field(Timed.DurationFormatter.format(form_params["duration"]))
     }
   end
 
   @impl true
   def handle_event("save", params, socket) do
+    # socket.assigns.form |> dbg()
+
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, report} ->
         # todo: inform parent that we have saved succesfully
-        {:noreply, socket}
+        {
+          :noreply,
+          socket
+          # makes sure that the form refers to the updated report
+          |> assign(:form, AshPhoenix.Form.for_update(report, :update))
+          |> put_flash(:info, "Report saved successfully")
+          |> push_patch(to: ~p"/tracking")
+        }
 
       {:error, form} ->
         {:noreply, assign(socket, :form, form)}
     end
+  end
+
+  defp push_event_to_update_input_field(socket, duration) do
+    push_event(socket, "update-duration-input", %{
+      id: "report-form-#{socket.assigns.report.id}[duration]",
+      duration: duration
+    })
   end
 
   attr :report, Report,
@@ -88,7 +131,7 @@ defmodule TimedWeb.Components.ReportRow do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div id={"report-#{assigns.report.id}"}>
       <.form
         :let={f}
         for={to_form(@form)}
@@ -104,6 +147,7 @@ defmodule TimedWeb.Components.ReportRow do
           report={@report}
           selected_customer_id={@selected_customer_id}
           target={@myself}
+          field={f[:customer_id]}
         />
 
         <.live_component
@@ -113,6 +157,7 @@ defmodule TimedWeb.Components.ReportRow do
           selected_customer_id={@selected_customer_id}
           selected_project_id={@selected_project_id}
           target={@myself}
+          field={f[:project_id]}
         />
 
         <.live_component
@@ -122,6 +167,7 @@ defmodule TimedWeb.Components.ReportRow do
           selected_project_id={@selected_project_id}
           report={@report}
           target={@myself}
+          field={f[:task_id]}
         />
 
         <div class="form-list-cell form-group max-lg:col-span-full">
@@ -137,20 +183,13 @@ defmodule TimedWeb.Components.ReportRow do
         </div>
 
         <div class="form-list-cell form-group cell-duration">
-          <%!-- TODO: figure out postgres duration type --%>
-          <%!-- <.input
+          <.live_component
+            module={DurationPicker}
+            id={"duration-picker-#{@report.id}"}
             field={f[:duration]}
-            name="duration"
-            class="duration-day form-control rounded"
-            placeholder="00:00"
-            autocomplete="off"
-            spellcheck="true"
-            title="Task duration"
-            pattern="^(?:[01]?\d|2[0-3])?:?(?:00|15|30|45)?$"
-            maxlength="5"
-            type="text"
-            aria-label="duration picker"
-          /> --%>
+            value={f[:duration].value}
+            report={@report}
+          />
         </div>
 
         <div class="form-list-cell form-group cell-review-billable-icons grid grid-cols-2 content-between gap-1 self-center">
@@ -159,11 +198,12 @@ defmodule TimedWeb.Components.ReportRow do
           <.toggle_button field={f[:not_billable]} title="Not billable" icon="hero-currency-dollar" />
         </div>
 
-        <div class="form-list-cell form-group cell-buttons grid grid-cols-2 justify-around gap-2 self-center text-sm [&>*]:px-2">
+        <div class="form-list-cell fo
+        rm-group cell-buttons grid grid-cols-2 justify-around gap-2 self-center text-sm [&>*]:px-2">
           <.button class="bg-danger hover:bg-danger"><.icon name="hero-trash" /></.button>
           <.button
             disabled={!@form.changed? || !@form.valid?}
-            class={"bg-primary hover:bg-primary #{(!@form.changed? || !@form.valid?) && "cursor-not-allowed"}"}
+            class={"bg-primary hover:bg-primary #{(!@form.changed? || !@form.valid?) && "cursor-not-allowed bg-secondary"}"}
             type="submit"
           >
             <.icon name="hero-bookmark-square" />
@@ -184,6 +224,7 @@ defmodule TimedWeb.Components.ReportRow do
 
   attr :selected_option, :any, default: nil
   attr :options, :list, required: true
+  attr :field, Phoenix.HTML.FormField, required: true
 
   attr :disabled, :boolean,
     default: false,
@@ -206,6 +247,9 @@ defmodule TimedWeb.Components.ReportRow do
         {render_slot(@placeholder, @selected_option)}
         <.icon class="w-5 h-5 ml-2 -mr-1" name="hero-chevron-down" />
       </button>
+
+      <%!-- Hidden input which is required so the form is submitted with this relationship --%>
+      <.input field={@field} name={@field.field} class="hidden" type="hidden" />
       <div
         phx-click-away={JS.add_class("hidden")}
         class="dropdown hidden absolute right-0 left-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 z-10"
@@ -238,6 +282,7 @@ defmodule TimedWeb.Components.ReportRow do
 
   attr :field, Phoenix.HTML.FormField, required: true, doc: "The FormField of the input field"
   attr :title, :string, required: true, doc: "The tooltip title of the button"
+  attr :icon, :string, required: true, doc: "The icon name of the button"
 
   defp toggle_button(assigns) do
     ~H"""

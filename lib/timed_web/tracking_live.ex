@@ -12,6 +12,11 @@ defmodule TimedWeb.TrackingLive do
     }
   end
 
+  @impl true
+  def handle_params(_unsigned_params, _uri, socket) do
+    {:noreply, socket}
+  end
+
   defp assign_reports(socket) do
     assign(socket, :reports, Tracking.get_reports!(load: [task: [project: :customer]]))
   end

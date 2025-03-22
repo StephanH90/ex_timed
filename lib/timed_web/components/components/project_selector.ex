@@ -41,6 +41,7 @@ defmodule TimedWeb.Components.ProjectSelector do
         on_select="select-project"
         target={@target}
         disabled={is_nil(@selected_customer_id)}
+        field={@field}
       >
         <:placeholder>
           <.placeholder_text

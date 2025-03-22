@@ -46,6 +46,7 @@ defmodule TimedWeb.Components.TaskSelector do
         on_select="select-task"
         target={@target}
         disabled={is_nil(@selected_project_id)}
+        field={@field}
       >
         <:placeholder>
           <.placeholder_text

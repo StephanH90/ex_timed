@@ -61,6 +61,7 @@ window.addEventListener("phx:update-duration-input", (e) => {
   let el = document.getElementById(e.detail.id);
   if (el) {
     el.value = e.detail.duration;
+    el.dataset.rawMinutes = e.detail.raw_minutes;
   }
 });
 

@@ -32,6 +32,7 @@ defmodule TimedWeb.Components.DurationPicker do
         id={@field.name}
         name="duration"
         class="duration-day form-control rounded"
+        input_class="h-12"
         placeholder="00:00"
         autocomplete="off"
         spellcheck="true"

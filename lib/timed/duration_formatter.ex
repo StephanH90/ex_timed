@@ -7,6 +7,8 @@ defmodule Timed.DurationFormatter do
   Formats a duration in minutes to a string in the format "HH:MM". It will also round up the duration to the nearest 15 minutes.
   """
   @spec format(integer | Postgrex.Interval.t()) :: String.t()
+  def format(nil), do: "00:00"
+
   def format(duration) when is_integer(duration) do
     duration = round_up_to_nearest_15!(duration)
 

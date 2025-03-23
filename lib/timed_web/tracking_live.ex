@@ -31,6 +31,7 @@ defmodule TimedWeb.TrackingLive do
         id={"report-#{report.id}"}
         report={report}
       />
+      <.live_component module={TimedWeb.Components.ReportRow} id="report-new" report={nil} />
     </div>
     """
   end

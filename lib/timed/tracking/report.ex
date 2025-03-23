@@ -20,7 +20,7 @@ defmodule Timed.Tracking.Report do
     end
 
     update :update do
-      accept [:comment, :duration, :not_billable, :review, :task_id]
+      accept [:comment, :duration, :not_billable, :review, :task_id, :date]
     end
   end
 
@@ -41,11 +41,13 @@ defmodule Timed.Tracking.Report do
     attribute :not_billable, :boolean do
       allow_nil? false
       public? true
+      default false
     end
 
     attribute :billed, :boolean do
       allow_nil? false
       public? true
+      default false
     end
 
     attribute :date, :date do

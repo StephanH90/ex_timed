@@ -9,13 +9,21 @@ defmodule TimedWeb.Components.ProjectSelector do
       :ok,
       socket
       |> assign(assigns)
-      |> assign(
-        :projects,
-        Projects.get_projects_for_customer!(assigns.selected_customer_id)
-      )
+      |> assign_projects()
       |> assign_selected_project()
     }
   end
+
+  defp assign_projects(%{assigns: %{selected_customer_id: nil}} = socket),
+    do: assign(socket, :projects, [])
+
+  defp assign_projects(socket),
+    do:
+      assign(
+        socket,
+        :projects,
+        Projects.get_projects_for_customer!(socket.assigns.selected_customer_id)
+      )
 
   defp assign_selected_project(socket) do
     assign(

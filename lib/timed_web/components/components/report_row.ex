@@ -17,17 +17,39 @@ defmodule TimedWeb.Components.ReportRow do
       |> assign(assigns)
       |> assign_selected_customer_id()
       |> assign_selected_project_id()
-      |> assign(:form, AshPhoenix.Form.for_update(assigns.report, :update))
+      |> assign_form()
     }
   end
+
+  defp assign_selected_customer_id(socket = %{assigns: %{report: nil}}),
+    do: assign(socket, :selected_customer_id, nil)
 
   defp assign_selected_customer_id(socket) do
     assign(socket, :selected_customer_id, socket.assigns.report.task.project.customer.id)
   end
 
+  defp assign_selected_project_id(socket = %{assigns: %{report: nil}}),
+    do: assign(socket, :selected_project_id, nil)
+
   defp assign_selected_project_id(socket) do
     assign(socket, :selected_project_id, socket.assigns.report.task.project.id)
   end
+
+  defp assign_form(socket = %{assigns: %{report: nil}}) do
+    assign(
+      socket,
+      :form,
+      AshPhoenix.Form.for_create(Report, :create,
+        prepare_source: fn changeset ->
+          # this prefills the :date value on the form
+          Ash.Changeset.set_argument(changeset, :date, Date.utc_today())
+        end
+      )
+    )
+  end
+
+  defp assign_form(socket),
+    do: assign(socket, :form, AshPhoenix.Form.for_update(socket.assigns.report, :update))
 
   @impl true
   def handle_event("select-customer", %{"id" => customer_id}, socket) do
@@ -36,7 +58,7 @@ defmodule TimedWeb.Components.ReportRow do
       socket
       |> assign(:selected_customer_id, customer_id)
       |> assign(:selected_project_id, nil)
-      |> assign(:form, AshPhoenix.Form.validate(socket.assigns.form, %{task_id: nil}))
+      |> reset_task_id()
     }
   end
 
@@ -46,7 +68,7 @@ defmodule TimedWeb.Components.ReportRow do
       :noreply,
       socket
       |> assign(:selected_project_id, project_id)
-      |> assign(:form, AshPhoenix.Form.validate(socket.assigns.form, %{task_id: nil}))
+      |> reset_task_id()
     }
   end
 
@@ -54,7 +76,16 @@ defmodule TimedWeb.Components.ReportRow do
   def handle_event("select-task", %{"id" => task_id}, socket) do
     {
       :noreply,
-      assign(socket, :form, AshPhoenix.Form.validate(socket.assigns.form, %{task_id: task_id}))
+      # assign(
+      #   socket,
+      #   :form,
+      #   AshPhoenix.Form.update_params(socket.assigns.form, &Map.put(&1, :task_id, task_id))
+      # )
+      assign(
+        socket,
+        :form,
+        AshPhoenix.Form.validate(socket.assigns.form, %{task_id: task_id})
+      )
     }
   end
 
@@ -65,12 +96,13 @@ defmodule TimedWeb.Components.ReportRow do
   def handle_event("update-duration", %{"duration" => duration}, socket) do
     {
       :noreply,
-      assign(
-        socket,
+      socket
+      |> assign(
         :form,
-        AshPhoenix.Form.validate(socket.assigns.form, %{
-          duration: Timed.DurationFormatter.parse!(duration)
-        })
+        AshPhoenix.Form.update_params(
+          socket.assigns.form,
+          &Map.put(&1, :duration, Timed.DurationFormatter.parse!(duration))
+        )
       )
       |> push_event_to_update_input_field(Timed.DurationFormatter.format(duration))
     }
@@ -98,8 +130,6 @@ defmodule TimedWeb.Components.ReportRow do
 
   @impl true
   def handle_event("save", params, socket) do
-    # socket.assigns.form |> dbg()
-
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, report} ->
         # todo: inform parent that we have saved succesfully
@@ -109,7 +139,7 @@ defmodule TimedWeb.Components.ReportRow do
           # makes sure that the form refers to the updated report
           |> assign(:form, AshPhoenix.Form.for_update(report, :update))
           |> put_flash(:info, "Report saved successfully")
-          |> push_patch(to: ~p"/tracking")
+          |> push_navigate(to: ~p"/tracking")
         }
 
       {:error, form} ->
@@ -119,10 +149,19 @@ defmodule TimedWeb.Components.ReportRow do
 
   defp push_event_to_update_input_field(socket, duration) do
     push_event(socket, "update-duration-input", %{
-      id: "report-form-#{socket.assigns.report.id}[duration]",
-      duration: duration
+      id: "report-form-#{id_helper(socket.assigns.report)}[duration]",
+      duration: duration,
+      raw_minutes: Timed.DurationFormatter.parse!(duration)
     })
   end
+
+  defp reset_task_id(socket),
+    do:
+      assign(
+        socket,
+        :form,
+        AshPhoenix.Form.update_params(socket.assigns.form, &Map.put(&1, :task_id, nil))
+      )
 
   attr :report, Report,
     default: nil,
@@ -131,19 +170,20 @@ defmodule TimedWeb.Components.ReportRow do
   @impl true
   def render(assigns) do
     ~H"""
-    <div id={"report-#{assigns.report.id}"}>
+    <div id={"report-#{id_helper(@report)}"}>
       <.form
         :let={f}
         for={to_form(@form)}
-        as={String.to_atom("report-form-#{@report.id}")}
+        as={String.to_atom("report-form-#{id_helper(@report)}")}
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
         class="report-row grid grid-cols-4 gap-2 p-1 lg:grid-cols-[repeat(3,minmax(0,0.9fr)),minmax(0,1.6fr),minmax(0,0.45fr),minmax(2rem,0.6fr),repeat(2,minmax(2rem,0.6fr))] lg:p-1.5 xl:grid-cols-[repeat(3,minmax(0,1.2fr)),minmax(0,1.8fr),minmax(0,0.4fr),minmax(2rem,0.5fr),repeat(2,minmax(2rem,0.5fr))] xl:p-2.5 max-lg:[&>*]:w-full"
       >
+        <.input wrapper_class="hidden" type="hidden" field={f[:date]} name="date" />
         <.live_component
           module={CustomerSelector}
-          id={"customer-selector-#{@report.id}"}
+          id={"customer-selector-#{id_helper(@report)}"}
           report={@report}
           selected_customer_id={@selected_customer_id}
           target={@myself}
@@ -152,7 +192,7 @@ defmodule TimedWeb.Components.ReportRow do
 
         <.live_component
           module={ProjectSelector}
-          id={"project-selector-#{@report.id}"}
+          id={"project-selector-#{id_helper(@report)}"}
           report={@report}
           selected_customer_id={@selected_customer_id}
           selected_project_id={@selected_project_id}
@@ -162,7 +202,7 @@ defmodule TimedWeb.Components.ReportRow do
 
         <.live_component
           module={TaskSelector}
-          id={"task-selector-#{@report.id}"}
+          id={"task-selector-#{id_helper(@report)}"}
           form={@form}
           selected_project_id={@selected_project_id}
           report={@report}
@@ -175,6 +215,7 @@ defmodule TimedWeb.Components.ReportRow do
             field={f[:comment]}
             name="comment"
             class="form-control comment-field rounded"
+            input_class="h-12"
             placeholder="Comment"
             spellcheck="true"
             type="text"
@@ -187,13 +228,13 @@ defmodule TimedWeb.Components.ReportRow do
         <div class="form-list-cell form-group cell-duration">
           <.live_component
             module={DurationPicker}
-            id={"duration-picker-#{@report.id}"}
+            id={"duration-picker-#{id_helper(@report)}"}
             field={f[:duration]}
             value={f[:duration].value}
             report={@report}
           />
         </div>
-
+        <div class="flex-grow"></div>
         <div class="form-list-cell form-group cell-review-billable-icons grid grid-cols-2 content-between gap-1 self-center">
           <.toggle_button field={f[:review]} title="Needs review" icon="hero-user" />
 
@@ -253,7 +294,7 @@ defmodule TimedWeb.Components.ReportRow do
         disabled={@disabled}
         class={[
           @disabled && "cursor-not-allowed",
-          "inline-flex justify-between w-full px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+          "h-12 inline-flex justify-between w-full px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
         ]}
       >
         {render_slot(@placeholder, @selected_option)}
@@ -268,9 +309,9 @@ defmodule TimedWeb.Components.ReportRow do
       >
         <!-- Search input -->
         <input
-          class=" px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
+          class="px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
           type="text"
-          placeholder="Search customers"
+          placeholder="Search"
           autocomplete="off"
           name={@search_input}
           phx-target={@target}
@@ -318,4 +359,7 @@ defmodule TimedWeb.Components.ReportRow do
     </div>
     """
   end
+
+  defp id_helper(report = nil), do: "new"
+  defp id_helper(report), do: report.id
 end

@@ -17,6 +17,19 @@ defmodule Timed.Projects.Task do
 
     read :for_project do
       argument :project_id, :integer, allow_nil?: false
+
+      filter expr(project_id == ^arg(:project_id))
+
+      prepare {Timed.Preparations.Alphabetically, attribute: :name}
+    end
+
+    read :search_for_project do
+      argument :project_id, :integer, allow_nil?: false
+      argument :search, :string, allow_nil?: false
+
+      prepare Timed.Preparations.Search
+      prepare {Timed.Preparations.Alphabetically, attribute: :name}
+
       filter expr(project_id == ^arg(:project_id))
     end
   end

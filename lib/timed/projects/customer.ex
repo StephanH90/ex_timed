@@ -25,13 +25,12 @@ defmodule Timed.Projects.Customer do
     defaults [:read, :destroy, create: :*, update: :*]
 
     read :alphabetically do
-      prepare build(sort: :name)
+      prepare {Timed.Preparations.Alphabetically, attribute: :name}
     end
 
     read :search do
       argument :search, :string, allow_nil?: false
-
-      filter expr(contains(string_downcase(name), string_downcase(^arg(:search))))
+      prepare Timed.Preparations.Search
     end
   end
 

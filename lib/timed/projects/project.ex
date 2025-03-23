@@ -16,8 +16,21 @@ defmodule Timed.Projects.Project do
   actions do
     defaults [:read, :destroy, create: :*, update: :*]
 
+    read :search_for_customer do
+      argument :search, :string, allow_nil?: false
+      argument :customer_id, :integer, allow_nil?: false
+
+      prepare Timed.Preparations.Search
+      prepare {Timed.Preparations.Alphabetically, attribute: :name}
+
+      filter expr(customer_id == ^arg(:customer_id))
+    end
+
     read :for_customer do
       argument :customer_id, :integer, allow_nil?: false
+
+      prepare {Timed.Preparations.Alphabetically, attribute: :name}
+
       filter expr(customer_id == ^arg(:customer_id))
     end
   end

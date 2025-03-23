@@ -14,6 +14,41 @@ defmodule TimedWeb.Components.TaskSelector do
     }
   end
 
+  @impl true
+  def handle_event("search", %{"search-task" => ""}, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :tasks,
+        Projects.get_tasks_for_project!(socket.assigns.selected_project_id)
+      )
+    }
+  end
+
+  def handle_event("search", %{"search-task" => search}, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :tasks,
+        Projects.search_tasks_for_project!(socket.assigns.selected_project_id, search)
+      )
+    }
+  end
+
+  @impl true
+  def handle_event("clear-search", _, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :tasks,
+        Projects.get_tasks_for_project!(socket.assigns.selected_project_id)
+      )
+    }
+  end
+
   defp assign_tasks(%{assigns: %{selected_project_id: nil}} = socket) do
     assign(socket, :tasks, [])
   end
@@ -44,7 +79,9 @@ defmodule TimedWeb.Components.TaskSelector do
       <TimedWeb.Components.ReportRow.searchable_dropdown
         options={@tasks}
         on_select="select-task"
-        target={@target}
+        search_input="search-task"
+        target={@myself}
+        report_row_component={@target}
         disabled={is_nil(@selected_project_id)}
         field={@field}
       >

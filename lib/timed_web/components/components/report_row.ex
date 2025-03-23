@@ -224,8 +224,18 @@ defmodule TimedWeb.Components.ReportRow do
     required: true,
     doc: "The target (@myself, or any valid DOM selector) that will handle phx-events"
 
+  attr :report_row_component, :any,
+    required: true,
+    doc: "The ReportRow component that will handle the select event"
+
   attr :selected_option, :any, default: nil
   attr :options, :list, required: true
+
+  attr :search_input, :string,
+    required: true,
+    doc:
+      "The name of the search input field (defines the params that will be sent to the search action)"
+
   attr :field, Phoenix.HTML.FormField, required: true
 
   attr :disabled, :boolean,
@@ -253,21 +263,23 @@ defmodule TimedWeb.Components.ReportRow do
       <%!-- Hidden input which is required so the form is submitted with this relationship --%>
       <.input field={@field} name={@field.field} class="hidden" type="hidden" />
       <div
-        phx-click-away={JS.add_class("hidden")}
+        phx-click-away={JS.add_class("hidden") |> JS.push("clear-search", target: @target)}
         class="dropdown hidden absolute right-0 left-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 z-10"
       >
         <!-- Search input -->
         <input
-          class="block w-full px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
+          class=" px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
           type="text"
           placeholder="Search customers"
           autocomplete="off"
-          name="search"
+          name={@search_input}
+          phx-target={@target}
+          phx-change="search"
           phx-debounce="300"
         />
         <a
           :for={option <- @options}
-          phx-target={@target}
+          phx-target={@report_row_component}
           phx-click={
             JS.push(@on_select, value: %{id: option.id})
             |> JS.add_class("hidden", to: {:closest, ".dropdown"})

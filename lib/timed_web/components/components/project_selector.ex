@@ -28,6 +28,41 @@ defmodule TimedWeb.Components.ProjectSelector do
     )
   end
 
+  @impl true
+  def handle_event("search", %{"search-project" => ""}, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :projects,
+        Projects.get_projects_for_customer!(socket.assigns.selected_customer_id)
+      )
+    }
+  end
+
+  def handle_event("search", %{"search-project" => search}, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :projects,
+        Projects.search_projects_for_customer!(socket.assigns.selected_customer_id, search)
+      )
+    }
+  end
+
+  @impl true
+  def handle_event("clear-search", _, socket) do
+    {
+      :noreply,
+      assign(
+        socket,
+        :projects,
+        Projects.get_projects_for_customer!(socket.assigns.selected_customer_id)
+      )
+    }
+  end
+
   attr :target, :any,
     required: true,
     doc: "The target (@myself, or any valid DOM selector) that will handle phx-events"
@@ -39,7 +74,9 @@ defmodule TimedWeb.Components.ProjectSelector do
       <TimedWeb.Components.ReportRow.searchable_dropdown
         options={@projects}
         on_select="select-project"
-        target={@target}
+        search_input="search-project"
+        target={@myself}
+        report_row_component={@target}
         disabled={is_nil(@selected_customer_id)}
         field={@field}
       >

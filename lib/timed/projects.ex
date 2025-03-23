@@ -19,10 +19,18 @@ defmodule Timed.Projects do
 
     resource Timed.Projects.Task do
       define :get_tasks_for_project, action: :for_project, args: [:project_id]
+
+      define :search_tasks_for_project,
+        action: :search_for_project,
+        args: [:project_id, :search]
     end
 
     resource Timed.Projects.Project do
       define :get_projects_for_customer, action: :for_customer, args: [:customer_id]
+
+      define :search_projects_for_customer,
+        action: :search_for_customer,
+        args: [:customer_id, :search]
     end
   end
 end

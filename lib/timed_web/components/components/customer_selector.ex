@@ -17,6 +17,29 @@ defmodule TimedWeb.Components.CustomerSelector do
     }
   end
 
+  @impl true
+  def handle_event("search", %{"search-customer" => ""}, socket) do
+    {
+      :noreply,
+      assign(socket, :customers, Projects.get_customers!())
+    }
+  end
+
+  def handle_event("search", %{"search-customer" => search}, socket) do
+    {
+      :noreply,
+      assign(socket, :customers, Projects.search_customers!(search))
+    }
+  end
+
+  @impl true
+  def handle_event("clear-search", _, socket) do
+    {
+      :noreply,
+      assign(socket, :customers, Projects.get_customers!())
+    }
+  end
+
   defp assign_selected_customer(socket) do
     assign(
       socket,
@@ -39,7 +62,9 @@ defmodule TimedWeb.Components.CustomerSelector do
       <TimedWeb.Components.ReportRow.searchable_dropdown
         options={@customers}
         on_select="select-customer"
-        target={@target}
+        search_input="search-customer"
+        target={@myself}
+        report_row_component={@target}
         field={@field}
       >
         <:placeholder>

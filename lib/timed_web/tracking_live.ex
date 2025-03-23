@@ -34,29 +34,4 @@ defmodule TimedWeb.TrackingLive do
     </div>
     """
   end
-
-  attr :disabled, :boolean, default: false
-  attr :duration, :integer, required: false
-  attr :maxlength, :integer, default: 5
-  attr :title, :string
-  attr :rest, :global
-
-  defp durationpicker_day(assigns) do
-    ~H"""
-    <input
-      aria-label="day picker"
-      name="duration-day"
-      pattern="^(?:[01]?\\d|2[0-3])?:?(?:00|15|30|45)?$"
-      type="text"
-      class="duration-day form-control rounded"
-      disabled={@disabled}
-      value={@duration}
-      maxlength={@maxlength}
-      placeholder="00:00"
-      autocomplete="off"
-      title={@title}
-      {@rest}
-    />
-    """
-  end
 end

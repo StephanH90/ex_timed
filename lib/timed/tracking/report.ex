@@ -13,14 +13,25 @@ defmodule Timed.Tracking.Report do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*]
+    defaults [:read, :destroy]
+
+    create :create do
+      accept [:date, :comment, :duration, :task_id]
+
+      argument :user, :struct do
+        constraints instance_of: User
+        allow_nil? false
+      end
+
+      change manage_relationship(:user, type: :append)
+    end
 
     read :newest do
       prepare build(sort: :id)
     end
 
     update :update do
-      accept [:comment, :duration, :not_billable, :review, :task_id, :date]
+      accept [:comment, :duration, :not_billable, :review, :task_id, :date, :user_id]
     end
   end
 
@@ -57,10 +68,12 @@ defmodule Timed.Tracking.Report do
 
     attribute :task_id, :integer do
       public? true
+      allow_nil? false
     end
 
     attribute :user_id, :integer do
       public? true
+      allow_nil? false
     end
 
     attribute :verified_by_id, :integer do

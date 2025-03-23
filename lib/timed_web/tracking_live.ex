@@ -24,6 +24,9 @@ defmodule TimedWeb.TrackingLive do
   @impl true
   def render(assigns) do
     ~H"""
+    <div>
+      ffoo
+    </div>
     <div class="reports">
       <.live_component
         :for={report <- @reports}

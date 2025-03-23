@@ -42,7 +42,10 @@ defmodule TimedWeb.Components.ReportRow do
       AshPhoenix.Form.for_create(Report, :create,
         prepare_source: fn changeset ->
           # this prefills the :date value on the form
-          Ash.Changeset.set_argument(changeset, :date, Date.utc_today())
+          # ! For demo purposes this is hardcoded to user_id = 1
+          changeset
+          |> Ash.Changeset.set_argument(:date, Date.utc_today())
+          |> Ash.Changeset.set_argument(:user, %{id: 1})
         end
       )
     )
@@ -76,11 +79,6 @@ defmodule TimedWeb.Components.ReportRow do
   def handle_event("select-task", %{"id" => task_id}, socket) do
     {
       :noreply,
-      # assign(
-      #   socket,
-      #   :form,
-      #   AshPhoenix.Form.update_params(socket.assigns.form, &Map.put(&1, :task_id, task_id))
-      # )
       assign(
         socket,
         :form,
@@ -124,6 +122,7 @@ defmodule TimedWeb.Components.ReportRow do
         :form,
         AshPhoenix.Form.validate(socket.assigns.form, form_params)
       )
+      |> dbg()
       |> push_event_to_update_input_field(Timed.DurationFormatter.format(form_params["duration"]))
     }
   end

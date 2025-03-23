@@ -14,5 +14,7 @@ defmodule Timed.Tracking do
     resource Timed.Tracking.Report do
       define :get_reports, action: :newest
     end
+
+    resource Timed.Statistics.Day
   end
 end

@@ -41,7 +41,7 @@ Hooks.DurationPicker = {
       if (e.key === "ArrowDown") {
         const change = e.shiftKey ? 60 : 15;
 
-        this.pushEventTo("#report-1", "update-duration", {
+        this.pushEventTo(this.el.form, "update-duration", {
           duration: minutes - change,
         });
       }

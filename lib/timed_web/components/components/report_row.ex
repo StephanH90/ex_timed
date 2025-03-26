@@ -2,6 +2,7 @@ defmodule TimedWeb.Components.ReportRow do
   @moduledoc """
   Row that reports a single report. Also contains an AshPhoenix form to create a new task or update an existing report.
   """
+  alias Timed.Employment.User
   alias Timed.Tracking.Report
   alias TimedWeb.Components.CustomerSelector
   alias TimedWeb.Components.DurationPicker
@@ -43,9 +44,11 @@ defmodule TimedWeb.Components.ReportRow do
         prepare_source: fn changeset ->
           # this prefills the :date value on the form
           # ! For demo purposes this is hardcoded to user_id = 1
+          first_user_id = Ash.read!(User) |> hd() |> Map.get(:id)
+
           changeset
-          |> Ash.Changeset.set_argument(:date, Date.utc_today())
-          |> Ash.Changeset.set_argument(:user, %{id: 1})
+          |> Ash.Changeset.set_argument(:date, socket.assigns.day)
+          |> Ash.Changeset.set_argument(:user, %{id: first_user_id})
         end
       )
     )
@@ -122,7 +125,6 @@ defmodule TimedWeb.Components.ReportRow do
         :form,
         AshPhoenix.Form.validate(socket.assigns.form, form_params)
       )
-      |> dbg()
       |> push_event_to_update_input_field(Timed.DurationFormatter.format(form_params["duration"]))
     }
   end
@@ -138,7 +140,7 @@ defmodule TimedWeb.Components.ReportRow do
           # makes sure that the form refers to the updated report
           |> assign(:form, AshPhoenix.Form.for_update(report, :update))
           |> put_flash(:info, "Report saved successfully")
-          |> push_navigate(to: ~p"/tracking")
+          |> push_navigate(to: ~p"/tracking?#{[day: Date.to_iso8601(socket.assigns.day)]}")
         }
 
       {:error, form} ->
@@ -166,10 +168,12 @@ defmodule TimedWeb.Components.ReportRow do
     default: nil,
     doc: "Report to update. If given nil a form for a new report will be created"
 
+  attr :day, Date, required: true
+
   @impl true
   def render(assigns) do
     ~H"""
-    <div id={"report-#{id_helper(@report)}"}>
+    <div id={"report-#{id_helper(@report)}"} data-test-report-row>
       <.form
         :let={f}
         for={to_form(@form)}
@@ -248,6 +252,7 @@ defmodule TimedWeb.Components.ReportRow do
             class={"bg-primary hover:bg-primary #{(!@form.changed? || !@form.valid?) && "cursor-not-allowed bg-secondary"}"}
             type="submit"
           >
+            <span class="sr-only">submit</span>
             <.icon name="hero-bookmark-square" />
           </.button>
         </div>
@@ -359,6 +364,6 @@ defmodule TimedWeb.Components.ReportRow do
     """
   end
 
-  defp id_helper(report = nil), do: "new"
+  defp id_helper(nil), do: "new"
   defp id_helper(report), do: report.id
 end

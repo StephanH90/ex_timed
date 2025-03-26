@@ -40,10 +40,11 @@ defmodule TimedWeb.Components.DurationPicker do
         pattern="^(?:[01]?\d|2[0-3])?:?(?:00|15|30|45)?$"
         maxlength="5"
         type="text"
-        aria-label="duration picker"
         phx-debounce="blur"
         phx-hook="DurationPicker"
         data-raw-minutes={Timed.DurationFormatter.to_minutes(@field.value)}
+        label="Duration"
+        label_class="hidden sr-only"
       />
     </div>
     """

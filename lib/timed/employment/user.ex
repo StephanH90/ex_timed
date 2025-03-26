@@ -22,11 +22,7 @@ defmodule Timed.Employment.User do
   end
 
   attributes do
-    attribute :id, :integer do
-      primary_key? true
-      allow_nil? false
-      public? true
-    end
+    integer_primary_key :id
 
     attribute :password, :string do
       allow_nil? false

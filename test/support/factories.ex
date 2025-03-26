@@ -13,6 +13,8 @@ defmodule Timed.Test.Factories do
 
   alias Timed.Tracking.Report
 
+  alias Timed.Employment.User
+
   factory Customer do
     attribute :name, &Faker.Person.name/0
     attribute :email, &Faker.Internet.email/0
@@ -42,12 +44,26 @@ defmodule Timed.Test.Factories do
   end
 
   factory Report do
-    attribute :duration, fn _ -> "15" end
+    attribute :duration, constant("15")
     attribute :comment, &Faker.Lorem.sentence/0
     attribute :not_billable, choose([true, false])
     attribute :billed, choose([true, false])
     attribute :date, fn _ -> Faker.Date.backward(5) end
 
-    auto_build([:task])
+    auto_build([:task, :user])
+  end
+
+  factory User do
+    attribute :password, constant("password")
+    attribute :is_superuser, choose([true, false])
+    attribute :username, &Faker.Internet.user_name/0
+    attribute :first_name, &Faker.Person.first_name/0
+    attribute :last_name, &Faker.Person.last_name/0
+    attribute :email, &Faker.Internet.email/0
+    attribute :is_staff, choose([true, false])
+    attribute :is_active, choose([true, false])
+    attribute :date_joined, fn _ -> Faker.Date.backward(5) end
+    attribute :tour_done, choose([true, false])
+    attribute :is_accountant, choose([true, false])
   end
 end

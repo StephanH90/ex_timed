@@ -12,6 +12,21 @@ defmodule Timed.Repo.Migrations.MigrateResources1 do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
     end
 
+    create table(:employment_user) do
+      add :password, :text, null: false
+      add :last_login, :utc_datetime_usec
+      add :is_superuser, :boolean, null: false
+      add :username, :text, null: false
+      add :first_name, :text, null: false
+      add :last_name, :text, null: false
+      add :email, :text, null: false
+      add :is_staff, :boolean, null: false
+      add :is_active, :boolean, null: false
+      add :date_joined, :utc_datetime_usec, null: false
+      add :tour_done, :boolean, null: false
+      add :is_accountant, :boolean, null: false
+    end
+
     create table(:tracking_report) do
       add :comment, :text, null: false
       add :duration, :interval, null: false
@@ -226,10 +241,6 @@ defmodule Timed.Repo.Migrations.MigrateResources1 do
 
     create unique_index(:projects_billingtype, [:name], name: "projects_billingtype_name_key")
 
-    create table(:employment_user, primary_key: false) do
-      add :id, :bigint, null: false, primary_key: true
-    end
-
     alter table(:tracking_report) do
       modify :user_id,
              references(:employment_user,
@@ -238,21 +249,6 @@ defmodule Timed.Repo.Migrations.MigrateResources1 do
                type: :bigint,
                prefix: "public"
              )
-    end
-
-    alter table(:employment_user) do
-      add :password, :text, null: false
-      add :last_login, :utc_datetime_usec
-      add :is_superuser, :boolean, null: false
-      add :username, :text, null: false
-      add :first_name, :text, null: false
-      add :last_name, :text, null: false
-      add :email, :text, null: false
-      add :is_staff, :boolean, null: false
-      add :is_active, :boolean, null: false
-      add :date_joined, :utc_datetime_usec, null: false
-      add :tour_done, :boolean, null: false
-      add :is_accountant, :boolean, null: false
     end
 
     create index(:employment_user, [:username], name: "employment_user_username_f3762b2b_like")

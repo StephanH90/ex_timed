@@ -30,6 +30,11 @@ defmodule Timed.Tracking.Report do
       prepare build(sort: :id)
     end
 
+    read :for_date do
+      argument :date, :date, allow_nil?: false
+      prepare build(sort: :id, filter: expr(date == ^arg(:date)))
+    end
+
     update :update do
       accept [:comment, :duration, :not_billable, :review, :task_id, :date, :user_id]
     end

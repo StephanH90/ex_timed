@@ -56,4 +56,24 @@ defmodule TimedWeb.Live.TrackingLiveTest do
       |> assert_has("div[data-test-report-row]", count: 2)
     end
   end
+
+  describe "date navigation" do
+    test "it navigates correctly", %{conn: conn} do
+      # required for the weekly overview widget which is currenty hardcoded to look for the first user
+      insert!(User)
+
+      conn
+      |> visit("/tracking")
+      |> click_link("previous day")
+      |> assert_path("/tracking",
+        query_params: %{day: Date.utc_today() |> Date.add(-1) |> Date.to_iso8601()}
+      )
+      |> click_link("next day")
+      |> assert_path("/tracking", query_params: %{day: Date.utc_today() |> Date.to_iso8601()})
+      |> click_link("next day")
+      |> assert_path("/tracking",
+        query_params: %{day: Date.utc_today() |> Date.add(1) |> Date.to_iso8601()}
+      )
+    end
+  end
 end

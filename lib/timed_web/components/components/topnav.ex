@@ -1,6 +1,7 @@
 defmodule TimedWeb.Components.Topnav do
   @moduledoc false
   use TimedWeb, :live_component
+  import TimedWeb.CoreComponents, only: [icon: 1]
 
   @impl true
   def render(assigns) do

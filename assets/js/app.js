@@ -87,3 +87,10 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+window.addEventListener("phx:live_reload:attached", ({ detail: reloader }) => {
+  // enable server log streaming to client.
+  // disable with reloader.disableServerLogs()
+  reloader.enableServerLogs();
+  console.log("🦠 'in here':", "in here");
+});

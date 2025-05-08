@@ -24,7 +24,10 @@ defmodule TimedWeb.Router do
   scope "/", TimedWeb do
     pipe_through :browser
 
-    ash_authentication_live_session :authenticated_routes do
+    # ash_authentication_live_session :authenticated_routes,
+    #   on_mount: {TimedWeb.LayoutHooks, :on_mount} do
+    ash_authentication_live_session :authenticated_routes,
+      on_mount: {TimedWeb.LayoutHooks, :on_mount} do
       # in each liveview, add one of the following at the top of the module:
       #
       # If an authenticated user must be present:
@@ -35,6 +38,10 @@ defmodule TimedWeb.Router do
       #
       # If an authenticated user must *not* be present:
       # on_mount {TimedWeb.LiveUserAuth, :live_no_user}
+
+      live "/analysis", AnalysisLive, :index
+      live "/tracking", TrackingLive, :index
+      live "/another-route", TrackingLive, :index
     end
   end
 
@@ -55,8 +62,6 @@ defmodule TimedWeb.Router do
     # Remove this if you do not want to use the reset password feature
     reset_route auth_routes_prefix: "/auth",
                 overrides: [TimedWeb.AuthOverrides, AshAuthentication.Phoenix.Overrides.Default]
-
-    live "/tracking", TrackingLive, :index
   end
 
   # Other scopes may use custom stacks.

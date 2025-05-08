@@ -4,6 +4,7 @@ defmodule TimedWeb.Components.DurationPicker do
   Provides additonal functionality like arrows up and down to increase or decrease the duration.
   """
   use TimedWeb, :live_component
+  import TimedWeb.CoreComponents, only: [input: 1]
 
   @impl true
   def update(assigns, socket) do

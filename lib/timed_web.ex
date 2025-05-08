@@ -88,7 +88,7 @@ defmodule TimedWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components
-      import TimedWeb.CoreComponents
+      import TimedWeb.Components.Preline
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

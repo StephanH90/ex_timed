@@ -9,6 +9,7 @@ defmodule TimedWeb.Layouts do
   `use TimedWeb, :live_view`.
   """
   use TimedWeb, :html
+  import TimedWeb.CoreComponents, only: [flash_group: 1]
 
   embed_templates "layouts/*"
 end

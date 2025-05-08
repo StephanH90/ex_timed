@@ -32,11 +32,6 @@ defmodule Timed.Projects.Costcenter do
     attribute :reference, :string do
       public? true
     end
-
-    attribute :is_deletd?, :boolean do
-      allow_nil? true
-      public? false
-    end
   end
 
   relationships do

@@ -6,5 +6,10 @@
     {@inner_content}
   </div>
 </main> --%>
-
-<TimedWeb.Components.Layout.header />
+<main>
+  <TimedWeb.Components.Layout.header current_uri={@current_uri} />
+  <.flash_group flash={@flash} />
+  <div class="container mx-auto mt-4">
+    {@inner_content}
+  </div>
+</main>

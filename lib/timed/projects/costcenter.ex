@@ -32,10 +32,17 @@ defmodule Timed.Projects.Costcenter do
     attribute :reference, :string do
       public? true
     end
+
+    attribute :is_deletd?, :boolean do
+      allow_nil? true
+      public? false
+    end
   end
 
   relationships do
-    has_many :tasks, Timed.Projects.Task
+    has_many :tasks, Timed.Projects.Task,
+      source_attribute: :id,
+      destination_attribute: :cost_center_id
   end
 
   identities do

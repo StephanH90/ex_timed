@@ -15,15 +15,21 @@ defmodule Timed.Statistics.Day do
     defaults [:read, :destroy, update: :*]
 
     create :create do
-      accept :date
-      argument :user, :map, allow_nil?: false
-      change manage_relationship(:user, type: :append_and_remove)
+      accept [:date, :reports, :user_id]
+      argument :user, :map, allow_nil?: true
+
+      change manage_relationship(:user, type: :append)
     end
   end
 
   attributes do
     uuid_primary_key :id
     attribute :date, :date, allow_nil?: false, public?: true
+
+    attribute :reports, {:array, :struct} do
+      constraints items: [instance_of: Report]
+      allow_nil? false
+    end
   end
 
   relationships do
@@ -31,28 +37,7 @@ defmodule Timed.Statistics.Day do
   end
 
   calculations do
-    calculate :reports, {:array, :struct}, GetReports do
-      constraints items: [instance_of: Report]
-    end
-
     calculate :duration, :float, SumDuration
-  end
-end
-
-defmodule GetReports do
-  @moduledoc """
-  Loads the reports for the given user and the given date
-  """
-  alias Timed.Tracking.Report
-  use Ash.Resource.Calculation
-  require Ash.Query
-
-  def calculate(records, _, _) do
-    Enum.map(records, fn record ->
-      Report
-      |> Ash.Query.filter(user_id: record.user_id, date: record.date)
-      |> Ash.read!()
-    end)
   end
 end
 

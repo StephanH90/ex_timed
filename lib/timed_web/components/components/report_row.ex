@@ -44,7 +44,8 @@ defmodule TimedWeb.Components.ReportRow do
         prepare_source: fn changeset ->
           # this prefills the :date value on the form
           # ! For demo purposes this is hardcoded to user_id = 1
-          first_user_id = Ash.read!(User) |> hd() |> Map.get(:id)
+          # first_user_id = Ash.read!(User) |> hd() |> Map.get(:id) |> dbg()
+          first_user_id = 1
 
           changeset
           |> Ash.Changeset.set_argument(:date, socket.assigns.day)

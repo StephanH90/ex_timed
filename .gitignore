@@ -38,6 +38,8 @@ npm-debug.log
 # tmp directory which can be used for liveview tests (because /tmp is not accessible to firefox on linux)
 /tmp
 
+/priv/static/*
+
 # Elixir LS
 .elixir_ls
 

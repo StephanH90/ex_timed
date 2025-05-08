@@ -14,8 +14,13 @@ defmodule Timed.Tracking do
     resource Timed.Tracking.Report do
       define :get_reports, action: :newest
       define :get_reports_for_date, action: :for_date, args: [:date]
+
+      define :get_reports_within_date_range,
+        action: :within_date_range,
+        args: [:start_date, :end_date]
     end
 
     resource Timed.Statistics.Day
+    resource WeeklyOverview
   end
 end

@@ -21,31 +21,40 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import "../node_modules/preline/dist/preline.js";
 
 let Hooks = {};
-Hooks.DurationPicker = {
-  // Handles the `ArrowUp` and `ArrowDown` key events to increase or decrease the
-  // duration by 15 minutes. Holding the `Shift` key will increase or decrease
-  // the duration by 60 minutes.
-  mounted() {
-    this.el.addEventListener("keyup", (e) => {
-      const minutes = parseInt(this.el.dataset.rawMinutes);
+Hooks = {
+  DurationPicker: {
+    // Handles the `ArrowUp` and `ArrowDown` key events to increase or decrease the
+    // duration by 15 minutes. Holding the `Shift` key will increase or decrease
+    // the duration by 60 minutes.
+    mounted() {
+      this.el.addEventListener("keyup", (e) => {
+        const minutes = parseInt(this.el.dataset.rawMinutes);
 
-      if (e.key === "ArrowUp") {
-        const change = e.shiftKey ? 60 : 15;
+        if (e.key === "ArrowUp") {
+          const change = e.shiftKey ? 60 : 15;
 
-        this.pushEventTo(this.el.form, "update-duration", {
-          duration: minutes + change,
-        });
-      }
-      if (e.key === "ArrowDown") {
-        const change = e.shiftKey ? 60 : 15;
+          this.pushEventTo(this.el.form, "update-duration", {
+            duration: minutes + change,
+          });
+        }
+        if (e.key === "ArrowDown") {
+          const change = e.shiftKey ? 60 : 15;
 
-        this.pushEventTo(this.el.form, "update-duration", {
-          duration: minutes - change,
-        });
-      }
-    });
+          this.pushEventTo(this.el.form, "update-duration", {
+            duration: minutes - change,
+          });
+        }
+      });
+    },
+  },
+  "hs:dropdown": {
+    mounted() {
+      // Required so new preline elements that are added to the dom by liveview work
+      window.HSDropdown.autoInit();
+    },
   },
 };
 let csrfToken = document

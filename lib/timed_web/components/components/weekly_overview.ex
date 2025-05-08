@@ -2,7 +2,7 @@ defmodule TimedWeb.Components.WeeklyOverview do
   @moduledoc """
   Shows the recorded time as bars for different days.
   """
-  alias Timed.Employment.User
+  alias Timed.Tracking
   use TimedWeb, :live_component
   alias Timed.Statistics.Day
 
@@ -17,17 +17,30 @@ defmodule TimedWeb.Components.WeeklyOverview do
   end
 
   defp load_days(socket) do
-    days =
+    start_date = Date.utc_today() |> Date.add(-10)
+    end_date = Date.utc_today() |> Date.add(10)
+
+    reports_within_date_range = Tracking.get_reports_within_date_range!(start_date, end_date)
+    first_user_id = 1
+
+    %{records: days} =
       Enum.map(-10..10, fn i ->
         date = Date.add(socket.assigns.day, i)
 
-        first_user_id = Ash.read!(User) |> hd() |> Map.get(:id)
+        reports_on_day = Enum.filter(reports_within_date_range, &(&1.date == date))
 
-        Day
         # hardcoded to user_id 1 for now. Would be replaced with actor(:id)
-        |> Ash.Changeset.for_create(:create, %{date: date, user: %{id: first_user_id}})
-        |> Ash.create!(load: :duration)
+        %{
+          date: date,
+          user_id: first_user_id,
+          reports: reports_on_day
+        }
       end)
+      |> Ash.bulk_create!(Day, :create,
+        load: :duration,
+        return_records?: true,
+        return_errors?: true
+      )
 
     assign(socket, :days, days)
   end
@@ -37,11 +50,6 @@ defmodule TimedWeb.Components.WeeklyOverview do
   @impl true
   def render(assigns) do
     ~H"""
-    <%!-- <div class="flex w-full overflow-hidden pb-12 pl-8 pt-5 sm:pl-10 md:pl-12 h-32">
-      <div class="relative flex flex-grow items-end justify-around">
-        <.weekly_overview_day :for={day <- @days} day={day} />
-      </div>
-    </div> --%>
     <div>
       <div
         class="flex w-full overflow-hidden pb-12 pl-8 pt-5 sm:pl-10 md:pl-12"

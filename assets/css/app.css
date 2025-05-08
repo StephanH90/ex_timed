@@ -1,10 +1,27 @@
-@import "tailwindcss/base";
-@import "./base.css" layer(base);
+@source "../node_modules/preline"; /* this is required for tailwind to pick up all .css classes for preline in the node modules folder */
+@source "../css";
+@source "../js";
+@source "../../lib/boogaloo_web";
 
-@import "tailwindcss/components";
-@import "./components.css" layer(components);
 
-@import "tailwindcss/utilities";
-@import "./utilities.css" layer(utilities);
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "../vendor/heroicons";
+
+@variant phx-click-loading ([".phx-click-loading&", ".phx-click-loading &"]);
+@variant phx-submit-loading ([".phx-submit-loading&", ".phx-submit-loading &"]);
+@variant phx-change-loading ([".phx-change-loading&", ".phx-change-loading &"]);
+@import "../node_modules/preline/variants.css";
 
 /* This file is for your main application CSS */
+
+/* Adds pointer cursor to buttons */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Defaults hover styles on all devices */
+@custom-variant hover (&:hover);

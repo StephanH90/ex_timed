@@ -58,7 +58,7 @@ defmodule Timed.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.1.1",
@@ -76,7 +76,11 @@ defmodule Timed.MixProject do
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:phoenix_test, "~> 0.5.2", only: :test, runtime: false},
+      {:phoenix_test,
+       only: :test,
+       runtime: false,
+       github: "StephanH90/phoenix_test",
+       branch: "feat/click-by-selector"},
       {:smokestack, "~> 0.9.2", only: :test},
       {:faker, "~> 0.18", only: :test}
     ]

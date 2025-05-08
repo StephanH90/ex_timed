@@ -45,7 +45,7 @@ defmodule TimedWeb.TrackingLive do
     <div class="grid--12of12 grid">
       <div class="grid md:grid-cols-[minmax(0,1fr),auto]">
         <h1 class="block max-md:mb-2">Thursday, 27.03.2025</h1>
-        <.date_navigation day={@day} />
+        <%!-- <.date_navigation day={@day} /> --%>
       </div>
       <.live_component id="weekly-overview" module={TimedWeb.Components.WeeklyOverview} day={@day} />
     </div>

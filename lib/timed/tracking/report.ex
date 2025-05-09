@@ -27,6 +27,10 @@ defmodule Timed.Tracking.Report do
     end
 
     read :newest do
+      pagination do
+        offset? true
+      end
+
       prepare build(sort: :id)
     end
 
@@ -110,5 +114,6 @@ defmodule Timed.Tracking.Report do
   relationships do
     belongs_to :user, User
     belongs_to :task, Task
+    belongs_to :verified_by, User
   end
 end

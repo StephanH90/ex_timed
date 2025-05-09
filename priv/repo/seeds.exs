@@ -85,6 +85,7 @@ Enum.each(1..1000, fn i ->
     billed: Enum.random([true, false]),
     date: DateTime.utc_now() |> Date.add(:rand.uniform(365) * -1),
     task_id: Enum.random(tasks).id,
-    user_id: Enum.random(users).id
+    user_id: Enum.random(users).id,
+    verified_by_id: (Enum.random([true, false]) && Enum.random(users).id) || nil
   })
 end)

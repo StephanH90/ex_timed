@@ -83,7 +83,8 @@ defmodule Timed.MixProject do
        branch: "feat/click-by-selector"},
       {:smokestack, "~> 0.9.2", only: :test},
       {:faker, "~> 0.18", only: :test},
-      {:scribe, "~> 0.11", only: :dev}
+      {:scribe, "~> 0.11", only: :dev},
+      {:tidewave, "~> 0.1", only: :dev}
     ]
   end
 

@@ -4,6 +4,7 @@ defmodule TimedWeb.Components.Preline do
   """
   use Phoenix.Component
   use Gettext, backend: TimedWeb.Gettext
+  import TimedWeb.CoreComponents, only: [icon: 1]
 
   # HEADERS
   slot :inner_block, required: true
@@ -59,8 +60,16 @@ defmodule TimedWeb.Components.Preline do
 
   attr :wrapping_class, :string, default: "", doc: "class applied to the wrapping div"
 
+  attr :header_col_click, :any,
+    default: nil,
+    doc: "the function for handling phx-click on a header column"
+
+  attr :sort, :string, default: nil, doc: "the current sort attribute"
+
   slot :col, required: true do
     attr :label, :string
+
+    attr :sort_attr, :string, doc: "if clicked sort by this attribute"
   end
 
   slot :action, doc: "the slot for showing user actions in the last table column"
@@ -82,8 +91,11 @@ defmodule TimedWeb.Components.Preline do
                   <th
                     :for={col <- @col}
                     class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500"
+                    phx-click={col[:sort_attr] && @header_col_click && @header_col_click.(col, @sort)}
                   >
                     {col[:label]}
+                    <.icon :if={col[:sort_attr] && @sort === col[:sort_attr]} name="hero-arrow-up" />
+                    <.icon :if={col[:sort_attr] && @sort !== col[:sort_attr]} name="hero-arrow-down" />
                   </th>
                   <th
                     :if={@action != []}
@@ -100,7 +112,7 @@ defmodule TimedWeb.Components.Preline do
               >
                 <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
                   <td
-                    :for={{col, i} <- Enum.with_index(@col)}
+                    :for={{col, _i} <- Enum.with_index(@col)}
                     class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200"
                     phx-click={@row_click && @row_click.(row)}
                   >

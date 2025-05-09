@@ -112,7 +112,7 @@ defmodule Timed.Tracking.Report do
   end
 
   relationships do
-    belongs_to :user, User
+    belongs_to :user, User, public?: true
     belongs_to :task, Task
     belongs_to :verified_by, User
   end

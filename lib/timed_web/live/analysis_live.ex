@@ -2,8 +2,29 @@ defmodule TimedWeb.AnalysisLive do
   alias Timed.Tracking
   use TimedWeb, :live_view
 
+  # @impl true
+  # def mount(_params, _session, socket) do
+  #   {:ok, assign(socket, :reports, reports.results)}
+  # end
+
   @impl true
-  def mount(_params, _session, socket) do
+  def handle_params(%{"sort" => sort}, _uri, socket) do
+    reports =
+      Tracking.get_reports!(
+        load: [:user, :verified_by, task: [project: :customer]],
+        page: %{
+          offset: 0,
+          limit: 50,
+          count: true
+        },
+        query: Ash.Query.sort_input(Tracking.Report, sort)
+      )
+
+    {:noreply, assign(socket, reports: reports.results, sort: sort)}
+  end
+
+  @impl true
+  def handle_params(_, _uri, socket) do
     reports =
       Tracking.get_reports!(
         load: [:user, :verified_by, task: [project: :customer]],
@@ -14,17 +35,24 @@ defmodule TimedWeb.AnalysisLive do
         }
       )
 
-    {:ok, assign(socket, :reports, reports.results)}
+    {:noreply, assign(socket, reports: reports.results, sort: "date")}
   end
 
   @impl true
   def render(assigns) do
     ~H"""
     <.h1>Analysis</.h1>
-
-    <.table id="reports" rows={@reports} wrapping_class="mt-8">
-      <:col :let={row} label="User">{row.user.username}</:col>
-      <:col :let={row} label="Date">{row.date}</:col>
+    <.table
+      id="reports"
+      rows={@reports}
+      wrapping_class="mt-8"
+      header_col_click={&sort_by/2}
+      sort={@sort}
+    >
+      <:col :let={row} label="User" sort_attr="user.username">
+        {row.user.username}
+      </:col>
+      <:col :let={row} label="Date" sort_attr="date">{row.date}</:col>
       <:col :let={row} label="Duration">{row.duration}</:col>
       <:col :let={row} label="Customer">{row.task.project.customer.name}</:col>
       <:col :let={row} label="Project">{row.task.project.name}</:col>
@@ -36,5 +64,12 @@ defmodule TimedWeb.AnalysisLive do
       <:col :let={_row} label="Rejected Review Not billable Billed">not implemented yet</:col>
     </.table>
     """
+  end
+
+  defp sort_by(js \\ %JS{}, col, current_sort) do
+    new_sort = (col.sort_attr === current_sort && "-#{current_sort}") || col.sort_attr
+
+    js
+    |> JS.navigate(~p"/analysis/?#{[sort: new_sort]}")
   end
 end

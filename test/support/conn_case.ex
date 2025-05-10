@@ -23,6 +23,7 @@ defmodule TimedWeb.ConnCase do
       @endpoint TimedWeb.Endpoint
 
       use TimedWeb, :verified_routes
+      use Timed.Test.Factories
 
       # Import conveniences for testing with connections
       import Plug.Conn

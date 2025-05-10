@@ -7,14 +7,6 @@ defmodule TimedWeb.AnalysisLive do
   import TimedWeb.CoreComponents, only: [icon: 1]
 
   @impl true
-  def mount(_params, _session, socket) do
-    {
-      :ok,
-      AnalysisFilters.assign_customer_options(socket)
-    }
-  end
-
-  @impl true
   def handle_params(params, _uri, socket) do
     reports =
       Tracking.get_reports!(
@@ -40,18 +32,9 @@ defmodule TimedWeb.AnalysisLive do
     }
   end
 
-  @impl true
-  def handle_event("change", %{"customer_id" => customer_id}, socket) do
-    params =
-      if customer_id === "" or customer_id === nil do
-        Map.delete(socket.assigns.params, "filter")
-      else
-        Map.put(socket.assigns.params, "filter", %{
-          "task" => %{"project" => %{"customer" => %{"id" => customer_id}}}
-        })
-      end
-
-    {:noreply, push_patch(socket, to: ~p"/analysis?#{Map.to_list(params)}")}
+  # @impl true
+  def handle_event("update-filters", form_params, socket) do
+    AnalysisFilters.handle_filters_change(socket, form_params)
   end
 
   @impl true
@@ -80,13 +63,13 @@ defmodule TimedWeb.AnalysisLive do
     <button
       type="button"
       class="fixed left-0 top-14 2xl:hidden py-3 px-4 inline-flex items-center gap-x-2 text-sm rounded-bl-none rounded-tl-none rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-      phx-click={open_overlay("#filters")}
+      phx-click={open_overlay("#filters-sidebar")}
     >
       <.icon name="hero-adjustments-horizontal" />
     </button>
 
     <div
-      id="filters"
+      id="filters-sidebar"
       class="hs-overlay [--auto-close:2xl] 2xl:block 2xl:translate-x-0 2xl:end-auto 2xl:bottom-0 w-96 hs-overlay-open:translate-x-0 -translate-x-full   transition-all duration-300 transform h-full hidden fixed top-0 start-0 bottom-0 z-60 bg-white border-e border-gray-200 dark:bg-neutral-800 dark:border-neutral-700"
       role="dialog"
       tabindex="-1"
@@ -96,7 +79,7 @@ defmodule TimedWeb.AnalysisLive do
       <button
         type="button"
         class="absolute top-4 right-4 2xl:hidden  flex justify-center items-center gap-x-3 size-6 bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:text-neutral-200"
-        phx-click={close_overlay("#filters")}
+        phx-click={close_overlay("#filters-sidebar")}
       >
         <.icon name="hero-x-mark" class="size-4" />
       </button>
@@ -106,10 +89,7 @@ defmodule TimedWeb.AnalysisLive do
           <.h4>Filters</.h4>
           <.button size={:sm} phx-click={JS.patch(~p"/analysis")}>Reset</.button>
         </div>
-        <TimedWeb.Components.AnalysisFilters.customer_dropdown
-          customer_options={@customer_options}
-          sort={@sort}
-        />
+        <TimedWeb.Components.AnalysisFilters.render_filters params={@params} />
       </div>
     </div>
 

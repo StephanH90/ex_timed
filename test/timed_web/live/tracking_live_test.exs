@@ -4,8 +4,6 @@ defmodule TimedWeb.Live.TrackingLiveTest do
   """
   use TimedWeb.FeatureCase, async: true
 
-  use Timed.Test.Factories
-
   alias Timed.Employment.User
   alias Timed.Projects.Task
   alias Timed.Tracking.Report

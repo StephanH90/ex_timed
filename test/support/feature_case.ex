@@ -8,6 +8,7 @@ defmodule TimedWeb.FeatureCase do
   using do
     quote do
       use TimedWeb, :verified_routes
+      use Timed.Test.Factories
 
       import TimedWeb.FeatureCase
 

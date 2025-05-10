@@ -14,6 +14,7 @@ defmodule Timed.Tracking do
     resource Timed.Tracking.Report do
       define :get_reports, action: :newest
       define :get_reports_for_date, action: :for_date, args: [:date]
+      # define :get_reports_for_analysis, action: :analysis, args: [:customer_id]
 
       define :get_reports_within_date_range,
         action: :within_date_range,

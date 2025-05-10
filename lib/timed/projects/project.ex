@@ -62,7 +62,7 @@ defmodule Timed.Projects.Project do
   end
 
   relationships do
-    belongs_to :customer, Customer, allow_nil?: false
+    belongs_to :customer, Customer, allow_nil?: false, public?: true
     belongs_to :billing_type, Billingtype, allow_nil?: false
     belongs_to :cost_center, Costcenter, allow_nil?: false
   end

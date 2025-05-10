@@ -5,37 +5,77 @@ defmodule TimedWeb.Components.Preline do
   use Phoenix.Component
   use Gettext, backend: TimedWeb.Gettext
   import TimedWeb.CoreComponents, only: [icon: 1]
+  alias Phoenix.LiveView.JS
+
+  def open_overlay(js \\ %JS{}, overlay_id) do
+    hs_event(js, detail: %{class: "HSOverlay", fun: "open", args: [overlay_id]})
+  end
+
+  def close_overlay(js \\ %JS{}, overlay_id) do
+    hs_event(js, detail: %{class: "HSOverlay", fun: "close", args: [overlay_id]})
+  end
+
+  defp hs_event(js, rest) do
+    JS.dispatch(js, "hs:exec", rest)
+  end
 
   # HEADERS
+  attr :class, :string, default: ""
   slot :inner_block, required: true
 
   def h1(assigns) do
     ~H"""
-    <h1 class="text-4xl dark:text-white">{render_slot(@inner_block)}</h1>
+    <h1 class={["text-4xl dark:text-white", @class]}>{render_slot(@inner_block)}</h1>
     """
   end
+
+  attr :class, :string, default: ""
 
   slot :inner_block, required: true
 
   def h2(assigns) do
     ~H"""
-    <h2 class="text-4xl dark:text-white">{render_slot(@inner_block)}</h2>
+    <h2 class={["text-3xl dark:text-white", @class]}>{render_slot(@inner_block)}</h2>
     """
   end
+
+  attr :class, :string, default: ""
 
   slot :inner_block, required: true
 
   def h3(assigns) do
     ~H"""
-    <h3 class="text-4xl dark:text-white">{render_slot(@inner_block)}</h3>
+    <h3 class={["text-2xl dark:text-white", @class]}>{render_slot(@inner_block)}</h3>
     """
   end
+
+  attr :class, :string, default: ""
 
   slot :inner_block, required: true
 
   def h4(assigns) do
     ~H"""
-    <h4 class="text-4xl dark:text-white">{render_slot(@inner_block)}</h4>
+    <h4 class={["text-xl dark:text-white", @class]}>{render_slot(@inner_block)}</h4>
+    """
+  end
+
+  attr :class, :string, default: ""
+
+  slot :inner_block, required: true
+
+  def h5(assigns) do
+    ~H"""
+    <h5 class={["text-lg dark:text-white", @class]}>{render_slot(@inner_block)}</h5>
+    """
+  end
+
+  attr :class, :string, default: ""
+
+  slot :inner_block, required: true
+
+  def h6(assigns) do
+    ~H"""
+    <h6 class={["text-base dark:text-white", @class]}>{render_slot(@inner_block)}</h6>
     """
   end
 
@@ -125,6 +165,43 @@ defmodule TimedWeb.Components.Preline do
         </div>
       </div>
     </div>
+    """
+  end
+
+  attr :style, :atom, default: :solid, values: [:solid, :outline, :ghost, :soft, :white, :link]
+  attr :size, :atom, default: :md, values: [:xs, :sm, :md, :lg]
+  attr :class, :string, default: ""
+  attr :rest, :global
+  slot :inner_block, required: true
+
+  def button(assigns) do
+    styles = %{
+      solid:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none",
+      outline:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 focus:outline-hidden focus:border-blue-600 focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:text-blue-500 dark:focus:border-blue-600",
+      ghost:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-hidden focus:bg-blue-100 focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400",
+      soft:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:hover:bg-blue-900 dark:focus:bg-blue-900",
+      white:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+      link:
+        "inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400"
+    }
+
+    size_classes = %{xs: "py-1 px-1", sm: "py-2 px-3", md: "py-3 px-4", lg: "p-4 sm:p-5"}
+
+    assigns =
+      assign(assigns,
+        btn_classes: Map.get(styles, assigns.style),
+        size_class: Map.get(size_classes, assigns.size)
+      )
+
+    ~H"""
+    <button type="button" class={[@btn_classes, @size_class, @class]} {@rest}>
+      {render_slot(@inner_block)}
+    </button>
     """
   end
 end

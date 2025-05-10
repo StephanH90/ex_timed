@@ -51,6 +51,6 @@ defmodule Timed.Projects.Task do
       attribute_type: :integer,
       source_attribute: :cost_center_id
 
-    belongs_to :project, Project, allow_nil?: false, attribute_type: :integer
+    belongs_to :project, Project, allow_nil?: false, attribute_type: :integer, public?: true
   end
 end

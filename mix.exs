@@ -84,7 +84,8 @@ defmodule Timed.MixProject do
       {:smokestack, "~> 0.9.2", only: :test},
       {:faker, "~> 0.18", only: :test},
       {:scribe, "~> 0.11", only: :dev},
-      {:tidewave, "~> 0.1", only: :dev}
+      {:tidewave, "~> 0.1", only: :dev},
+      {:live_select, "~> 1.0"}
     ]
   end
 

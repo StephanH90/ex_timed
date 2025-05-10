@@ -49,6 +49,26 @@ defmodule Timed.Tracking.Report do
     update :update do
       accept [:comment, :duration, :not_billable, :review, :task_id, :date, :user_id]
     end
+
+    # read :analysis do
+    #   argument :customer_id, :integer, allow_nil?: true
+    #   argument :sort, :string, default: "date"
+
+    #   filter expr(
+    #            if is_nil(^arg(:customer_id)) do
+    #              true
+    #            else
+    #              task.project.customer_id == ^arg(:customer_id)
+    #            end
+    #          )
+    #   filter expr(
+    #            if is_nil(^arg(:customer_id)) do
+    #              true
+    #            else
+    #              task.project.customer_id == ^arg(:customer_id)
+    #            end
+    #          )
+    # end
   end
 
   attributes do
@@ -113,7 +133,7 @@ defmodule Timed.Tracking.Report do
 
   relationships do
     belongs_to :user, User, public?: true
-    belongs_to :task, Task
+    belongs_to :task, Task, public?: true
     belongs_to :verified_by, User
   end
 end

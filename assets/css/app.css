@@ -2,6 +2,7 @@
 @source "../css";
 @source "../js";
 @source "../../lib/boogaloo_web";
+@source "../../deps/live_select/lib/live_select/component.*ex";
 
 
 @import "tailwindcss";

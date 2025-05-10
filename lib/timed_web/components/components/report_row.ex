@@ -8,7 +8,7 @@ defmodule TimedWeb.Components.ReportRow do
   alias TimedWeb.Components.DurationPicker
   alias TimedWeb.Components.ProjectSelector
   alias TimedWeb.Components.TaskSelector
-  import TimedWeb.CoreComponents, only: [icon: 1, input: 1, button: 1]
+  import TimedWeb.CoreComponents, only: [icon: 1, input: 1]
   use TimedWeb, :live_component
 
   @impl true

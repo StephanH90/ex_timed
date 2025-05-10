@@ -112,11 +112,11 @@ defmodule TimedWeb.Components.Layout do
     <.link
       navigate={@to}
       class={[
-        "py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 border-gray-800 font-medium focus:outline-hidden dark:border-neutral-200 text-gray-500 dark:text-neutral-400",
-        (@to == @current_uri && "md:border-b-2") ||
+        "py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 border-gray-800 font-medium focus:outline-hidden dark:border-neutral-200 text-gray-500",
+        (@to == @current_uri && "md:border-b-2 dark:text-neutral-200 text-gray-500") ||
           "hover:text-gray-400  dark:hover:text-neutral-500"
       ]}
-      aria-current={if @to == @current_uri, do: "page", else: nil}
+      aria-current={@to === @current_uri && "page"}
       {@opts}
     >
       {@label}

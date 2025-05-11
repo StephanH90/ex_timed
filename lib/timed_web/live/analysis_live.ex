@@ -18,7 +18,7 @@ defmodule TimedWeb.AnalysisLive do
         ],
         query: [
           sort: Ash.Sort.parse_input!(Report, params["sort"]),
-          filter: Ash.Filter.parse_input!(Report, params["filter"] || true)
+          filter: params["filter"] && Ash.Filter.parse_input!(Report, params["filter"])
         ]
       )
 

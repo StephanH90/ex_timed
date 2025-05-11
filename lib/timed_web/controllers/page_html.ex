@@ -5,7 +5,7 @@ defmodule TimedWeb.PageHTML do
   See the `page_html` directory for all templates available.
   """
   use TimedWeb, :html
-  import TimedWeb.CoreComponents, only: [icon: 1, flash_group: 1]
+  import TimedWeb.CoreComponents, only: [flash_group: 1]
 
   embed_templates "page_html/*"
 end

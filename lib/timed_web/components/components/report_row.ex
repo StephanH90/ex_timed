@@ -2,7 +2,6 @@ defmodule TimedWeb.Components.ReportRow do
   @moduledoc """
   Row that reports a single report. Also contains an AshPhoenix form to create a new task or update an existing report.
   """
-  alias Timed.Employment.User
   alias Timed.Tracking.Report
   alias TimedWeb.Components.CustomerSelector
   alias TimedWeb.Components.DurationPicker

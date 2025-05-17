@@ -35,7 +35,7 @@ defmodule Timed.Projects.Costcenter do
   end
 
   relationships do
-    has_many :tasks, Timed.Projects.Task
+    has_many :tasks, Timed.Projects.Task, destination_attribute: :cost_center_id
   end
 
   identities do

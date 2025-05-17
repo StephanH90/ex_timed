@@ -46,7 +46,11 @@ defmodule Timed.Projects.Task do
   end
 
   relationships do
-    belongs_to :cost_center, Costcenter, allow_nil?: false, attribute_type: :integer
+    belongs_to :cost_center, Costcenter,
+      allow_nil?: false,
+      attribute_type: :integer,
+      destination_attribute: :id
+
     belongs_to :project, Project, allow_nil?: false, attribute_type: :integer
   end
 end
